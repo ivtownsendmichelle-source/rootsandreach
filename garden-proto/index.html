@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Garden Planner Sensor Test</title>
+  <script type="module" crossorigin src="./assets/prototype-D-EjwDJL.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="stylesheet" crossorigin href="./assets/prototype-DjnaeQol.css">
+</head>
+<body>
+<div id="start-screen" class="screen">
+  <h1>Sensor test</h1>
+  <p>This throwaway page checks whether this phone can tell where its camera is pointing. Stand outside on a clear day. Press Start, allow motion and location, then point the crosshair at the sun and press Log.</p>
+  <label>Latitude <input id="lat" type="number" step="0.0001" value="42.163"></label>
+  <label>Longitude <input id="lon" type="number" step="0.0001" value="-123.648"></label>
+  <label>Declination (° east) <input id="decl" type="number" step="0.1" value="14"></label>
+  <button id="start">Start</button>
+  <p class="small">Estimated. Calibrate the compass by moving the phone in a figure eight if the numbers drift.</p>
+</div>
+
+<div id="live" class="screen" hidden>
+  <video id="cam" autoplay playsinline muted></video>
+  <div id="crosshair"></div>
+  <div id="readout">
+    <div><span class="k">Camera</span> <span id="cam-h">–</span>° / <span id="cam-e">–</span>°</div>
+    <div><span class="k">Sun</span> <span id="sun-h">–</span>° / <span id="sun-e">–</span>°</div>
+    <div><span class="k">Δ</span> <span id="d-h">–</span>° / <span id="d-e">–</span>°</div>
+    <div class="small"><span id="src">–</span> · acc <span id="acc">–</span></div>
+  </div>
+  <div id="controls">
+    <button id="log">Log reading</button>
+    <button id="copy">Copy JSON</button>
+    <button id="download">Download JSON</button>
+  </div>
+  <table id="table"><thead><tr><th>#</th><th>ΔH</th><th>ΔE</th><th>src</th></tr></thead><tbody></tbody></table>
+</div>
+
+<div id="rotate" class="screen" hidden><p>Rotate to portrait</p></div>
+
+</body>
+</html>
