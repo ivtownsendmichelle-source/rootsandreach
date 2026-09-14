@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Garden Planner Beta Brief</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{
+  --paper:#F3EDDF; --paper-2:#EAE2CF; --ink:#2B2A24; --ink-2:#5B584C;
+  --moss:#3E5A3A; --terracotta:#B4552F; --straw:#D9B45A; --rule:#CFC5AC;
+  --sun:#E9C46A; --part:#B7C9A0; --shade:#B9B6AE;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#1E1F1A; --paper-2:#272921; --ink:#EDE7D6; --ink-2:#B9B3A0;
+    --moss:#9CC08F; --terracotta:#E0805A; --straw:#E1C475; --rule:#43463A;
+    --sun:#C9A24A; --part:#7F9A6B; --shade:#6E6C66;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#1E1F1A; --paper-2:#272921; --ink:#EDE7D6; --ink-2:#B9B3A0;
+  --moss:#9CC08F; --terracotta:#E0805A; --straw:#E1C475; --rule:#43463A;
+  --sun:#C9A24A; --part:#7F9A6B; --shade:#6E6C66;
+}
+body{background:var(--paper);color:var(--ink);font-family:"Source Serif 4",Georgia,"Times New Roman",serif;font-size:17px;line-height:1.6;margin:0}
+.wrap{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:2.6rem;font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.5rem;font-weight:600;margin-top:2.6rem;padding-top:1.2rem;border-top:1px solid var(--rule)}
+h3{font-size:1.1rem;font-weight:600;margin-top:1.4rem}
+p{margin:.9rem 0}
+.eyebrow{font-family:"Source Serif 4",serif;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--terracotta);font-weight:600;margin-bottom:.8rem}
+.lede{font-size:1.2rem;color:var(--ink-2);margin-top:1rem}
+.status{display:inline-block;border:1px solid var(--terracotta);color:var(--terracotta);border-radius:999px;padding:.15rem .7rem;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;margin-top:1.2rem}
+.bed{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;margin:1.6rem 0 .4rem;font-size:1.05rem;line-height:1}
+.bed span{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:3px}
+.sun{background:var(--sun)} .part{background:var(--part)} .shade{background:var(--shade)}
+.cap{font-size:.85rem;color:var(--ink-2);margin:0 0 1rem}
+.key{display:flex;gap:1.2rem;font-size:.85rem;color:var(--ink-2)}
+.key i{display:inline-block;width:.8rem;height:.8rem;border-radius:2px;vertical-align:-1px;margin-right:.35rem}
+ol.walk{padding-left:0;list-style:none;counter-reset:s;margin:1.2rem 0}
+ol.walk li{counter-increment:s;position:relative;padding-left:2.6rem;margin:1rem 0}
+ol.walk li::before{content:counter(s);position:absolute;left:0;top:.1rem;width:1.8rem;height:1.8rem;border-radius:50%;background:var(--moss);color:var(--paper);font-family:Fraunces,serif;font-weight:600;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+ol.walk b{font-weight:600}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;margin-top:1.2rem}
+@media(max-width:560px){.two{grid-template-columns:1fr}}
+.two h3{margin-top:0}
+.two ul{padding-left:1.1rem;margin:.6rem 0}
+.two li{margin:.4rem 0}
+.does h3{color:var(--moss)} .doesnt h3{color:var(--terracotta)}
+.note{background:var(--paper-2);border-left:3px solid var(--straw);padding:.9rem 1.1rem;margin:1.4rem 0;font-size:.98rem}
+ul.plain{padding-left:1.1rem} ul.plain li{margin:.45rem 0}
+.sig{margin-top:2.6rem;padding-top:1.2rem;border-top:1px solid var(--rule);color:var(--ink-2);font-size:.95rem}
+a{color:var(--terracotta)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="eyebrow">Beta tester brief</div>
+  <h1>A square foot garden planner that does the thinking for beginners</h1>
+  <p class="lede">A phone app that estimates the sunlight in your garden, lays out your beds one square foot at a time, tells you what grows well next to what, and hands you a weekly to-do list. Built for people who have never gardened by a method and don't want to read a book first.</p>
+  <span class="status">Not built yet. Design finished, build starting.</span>
+
+  <h2>The idea in one paragraph</h2>
+  <p>Square foot gardening and the French intensive method both come down to the same promise: get a lot of food out of a small, well-planned bed. The catch is that planning it well means knowing your light, knowing how many of each plant fit in a square, knowing which neighbors help and which fight, and knowing when to start each thing for your climate. Experienced gardeners carry that in their heads. This app carries it for the person who doesn't.</p>
+
+  <h2>What a first session looks like</h2>
+  <ol class="walk">
+    <li><b>Say where you are.</b> The app uses your phone's location to find the nearest weather station and fills in your average last spring frost and first fall frost. You can change them if you know your yard runs colder.</li>
+    <li><b>Pick what you actually eat.</b> A grid of pictures. Tomatoes, lettuce, carrots, whatever you'd cook with. Five to ten choices. The app uses this so its suggestions are food you want, not a random assortment.</li>
+    <li><b>Tell it about your bed.</b> Name it, give it a size in feet, and say which way it runs. Then choose the light: either tap "sunny, mixed, or shady," or stand in the bed and let the phone measure the skyline.</li>
+    <li><b>Measure the light, if you want to.</b> You hold the phone up like you're taking a photo and slowly trace the tops of the trees, fences, and buildings all the way around you. The phone's compass and tilt sensors record how high the skyline is in every direction. Combined with your location, the app works out roughly how many hours of direct sun that spot gets in any month. About a minute of your time. Snap a few photos while you're there so you remember the spot.</li>
+    <li><b>Fill the squares.</b> Your bed appears as a grid, each square tinted by how much light it gets. Tap a square and the app lists crops that suit it, best first, and tells you why. Pick one and the square fills with the right number of plants: one tomato, four lettuces, sixteen carrots. Put a bean next to an onion and a small note appears explaining why that's a poor pairing.</li>
+    <li><b>Say how each one is going in.</b> Seeds started indoors, seeds sown straight in the bed, or a seedling bought from a nursery. This matters because a bought tomato start shouldn't get a "start your seeds" reminder in March.</li>
+    <li><b>Get your to-do list.</b> "This week: start peppers indoors. In two weeks: sow peas in the back bed." Each task shows a little picture of the bed with the right squares lit up. When you do the task, you tick it off and record the real date, and the later reminders shift to match.</li>
+  </ol>
+
+  <div class="bed" aria-label="Example bed: a 10 by 2 slice showing sun, part sun and shade squares with crops">
+    <span class="sun">🍅</span><span class="sun">🍅</span><span class="sun">🌿</span><span class="sun">🌶️</span><span class="part">🥬</span><span class="part">🥬</span><span class="part">🥕</span><span class="shade">🥬</span><span class="shade">🌱</span><span class="shade">🌱</span>
+    <span class="sun">🌼</span><span class="sun">🍅</span><span class="sun">🌿</span><span class="sun">🥒</span><span class="part">🥕</span><span class="part">🥕</span><span class="part">🧅</span><span class="shade">🥬</span><span class="shade">🌱</span><span class="shade">🌱</span>
+  </div>
+  <div class="key"><span><i class="sun"></i>Full sun</span><span><i class="part"></i>Part sun</span><span><i class="shade"></i>Shade</span></div>
+  <p class="cap">Example slice of a bed as the app would show it. Sunny end on the left, shaded end on the right, a crop in every square.</p>
+
+  <h2>What it does and what it doesn't</h2>
+  <div class="two">
+    <div class="does">
+      <h3>Version one does</h3>
+      <ul>
+        <li>Estimate direct sun per square, by month, from a phone sweep or a quick pick</li>
+        <li>Standard square foot plant counts</li>
+        <li>Companion and antagonist notes, each with a source</li>
+        <li>Suggest crops for any empty square</li>
+        <li>Trellis crops and what they'll shade</li>
+        <li>Weekly tasks from your frost dates and planting method</li>
+        <li>Work entirely offline, save on the phone, export a backup file</li>
+      </ul>
+    </div>
+    <div class="doesnt">
+      <h3>Version one doesn't</h3>
+      <ul>
+        <li>Design your whole bed for you automatically</li>
+        <li>Plan succession sowings</li>
+        <li>Handle greenhouses or containers</li>
+        <li>Sync between devices or need an account</li>
+        <li>Work outside the United States</li>
+        <li>Run on iPhone yet (Android first)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note"><b>About the light estimate.</b> Phone compasses drift and trees have gaps, so the app says "estimated direct sun under clear skies," never "exact." Every measurement can be corrected by hand on a compass dial, and the first thing we build is a test of the sensor math on a real phone in a real garden before anything else goes on top of it.</div>
+
+  <h2>What beta testing would involve</h2>
+  <p>Google requires a new app to run a closed test before it can be sold: at least twelve people with Android phones, opted in for fourteen days straight. Testers install the app from the Play Store through a private link, use it however they like, and tell us what's wrong.</p>
+  <ul class="plain">
+    <li><b>Time:</b> an hour to set up your first bed, then a few minutes here and there over two weeks.</li>
+    <li><b>Cost:</b> none. Beta testers keep the app free after launch.</li>
+    <li><b>Feedback:</b> a short message or a call. Screenshots welcome. We want the annoying parts, the wrong advice, and the moments you didn't know what to do next.</li>
+    <li><b>Data:</b> nothing leaves your phone. No account, no tracking, no upload. Your garden lives on your device and in any backup file you choose to export.</li>
+  </ul>
+
+  <h2>What we'd especially value from a garden professional</h2>
+  <ul class="plain">
+    <li><b>Judging the advice.</b> Are the plant counts, spacing, and companion pairings ones you'd stand behind? Which claims would you cut? Every companion note in the app carries a citation, and we'd rather drop a doubtful one than keep it.</li>
+    <li><b>Judging the calendar.</b> Are the "weeks before last frost" timings right for the crops you know best? Where does frost-date planning break down in real yards?</li>
+    <li><b>Testing the sun estimate against your eye.</b> You already know how much light a spot gets. Does the app's number match?</li>
+    <li><b>Telling us what a beginner will get wrong anyway.</b> The app is meant to head off first-year mistakes. You've seen more of them than we have.</li>
+  </ul>
+
+  <h2>Timeline</h2>
+  <p>The sensor test comes first, then the planner and calendar, then a version on the web for early looks, then the Play Store closed test. We'll send a date for the closed test once the web version is working on a real phone. If you'd like to be one of the twelve, a yes is all we need for now.</p>
+
+  <div class="sig">Roots &amp; Reach Garden Planner (working name). Questions and a yes or no to Michelle.</div>
+</div>
+</body>
+</html>
