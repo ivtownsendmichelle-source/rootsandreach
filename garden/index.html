@@ -1,0 +1,3636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Southern Oregon Garden Planner</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #0d1117;
+  color: #d4d8de;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== VARIABLES ===== */
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #1c2333;
+  --bg4: #21262d;
+  --border: #30363d;
+  --border2: #3d444d;
+  --text: #d4d8de;
+  --text2: #9198a1;
+  --text3: #636c76;
+  --gold: #f5d98a;
+  --gold2: #e8c46a;
+  --gold3: #c9a43a;
+  --green: #3fb950;
+  --green2: #238636;
+  --green3: #1a6e2e;
+  --blue: #388bfd;
+  --blue2: #1f6feb;
+  --blue3: #0d419d;
+  --red: #f85149;
+  --red2: #da3633;
+  --orange: #e3b341;
+  --purple: #8957e5;
+  --teal: #39d353;
+  --radius: 8px;
+  --radius-sm: 5px;
+  --shadow: 0 2px 12px rgba(0,0,0,.4);
+  --shadow-lg: 0 4px 24px rgba(0,0,0,.6);
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+/* ===== HEADER ===== */
+#app-header {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+#app-header h1 {
+  font-family: 'Lora', serif;
+  font-size: 1.25rem;
+  color: var(--gold);
+  flex: 1;
+  white-space: nowrap;
+}
+#app-header h1 span { font-weight: 400; font-style: italic; color: var(--text2); font-size: 0.9rem; margin-left: 8px; }
+.header-btns { display: flex; gap: 8px; }
+.btn-icon {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-family: 'DM Sans', sans-serif;
+  transition: all .15s;
+}
+.btn-icon:hover { background: var(--bg4); color: var(--text); border-color: var(--border2); }
+
+/* ===== TABS ===== */
+#tab-bar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  overflow-x: auto;
+  padding: 0 16px;
+  gap: 2px;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--text2);
+  padding: 12px 16px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+.tab-icon { font-size: 1rem; }
+
+/* ===== TAB PANELS ===== */
+.tab-panel { display: none; padding: 24px; max-width: 1200px; margin: 0 auto; }
+.tab-panel.active { display: block; }
+
+/* ===== BUTTONS ===== */
+.btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all .15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-primary {
+  background: var(--gold3);
+  color: #0d1117;
+  border-color: var(--gold3);
+}
+.btn-primary:hover { background: var(--gold2); border-color: var(--gold2); }
+.btn-secondary {
+  background: var(--bg3);
+  color: var(--text);
+  border-color: var(--border);
+}
+.btn-secondary:hover { background: var(--bg4); border-color: var(--border2); }
+.btn-ghost {
+  background: none;
+  color: var(--text2);
+  border-color: var(--border);
+}
+.btn-ghost:hover { background: var(--bg3); color: var(--text); }
+.btn-green {
+  background: var(--green2);
+  color: #fff;
+  border-color: var(--green2);
+}
+.btn-green:hover { background: var(--green3); }
+.btn-sm { padding: 5px 10px; font-size: 0.78rem; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.card-title {
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+/* ===== FORM ELEMENTS ===== */
+input[type="text"], input[type="number"], input[type="date"], select, textarea {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  width: 100%;
+  outline: none;
+  transition: border-color .15s;
+}
+input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus,
+select:focus, textarea:focus {
+  border-color: var(--gold3);
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--bg4);
+  border-radius: 4px;
+  height: 6px;
+  outline: none;
+  cursor: pointer;
+  width: 100%;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+}
+input[type="checkbox"] {
+  accent-color: var(--gold3);
+  width: 15px; height: 15px;
+  cursor: pointer;
+}
+label { font-size: 0.83rem; color: var(--text2); cursor: pointer; }
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; margin-bottom: 5px; }
+.form-row { display: flex; gap: 12px; }
+.form-row .form-group { flex: 1; }
+
+/* ===== ONBOARDING ===== */
+#onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(13,17,23,.95);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+#onboarding-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+#onboarding-header {
+  background: linear-gradient(135deg, #1a2a1a 0%, #1c2333 100%);
+  padding: 28px 28px 20px;
+  border-bottom: 1px solid var(--border);
+}
+#onboarding-header h2 {
+  font-family: 'Lora', serif;
+  font-size: 1.4rem;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+#onboarding-header p { color: var(--text2); font-size: 0.88rem; }
+.wizard-steps {
+  display: flex;
+  gap: 0;
+  padding: 0 28px;
+  margin-top: 16px;
+}
+.wizard-step-dot {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  font-size: 0.75rem;
+  color: var(--text3);
+}
+.wizard-step-dot::before {
+  content: attr(data-n);
+  display: block;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--bg3);
+  border: 2px solid var(--border);
+  margin: 0 auto 4px;
+  line-height: 18px;
+  font-weight: 600;
+}
+.wizard-step-dot.active::before { border-color: var(--gold); color: var(--gold); background: var(--bg3); }
+.wizard-step-dot.done::before { background: var(--gold3); border-color: var(--gold3); color: #000; }
+#onboarding-body { padding: 24px 28px; }
+.wizard-page { display: none; }
+.wizard-page.active { display: block; }
+.wizard-page h3 {
+  font-family: 'Lora', serif;
+  font-size: 1.05rem;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+#onboarding-footer {
+  padding: 16px 28px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border);
+}
+.onb-hint { font-size: 0.78rem; color: var(--text3); }
+.toggle-group {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.toggle-group button {
+  flex: 1;
+  padding: 8px 14px;
+  background: var(--bg3);
+  border: none;
+  color: var(--text2);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all .15s;
+}
+.toggle-group button.active { background: var(--gold3); color: #000; font-weight: 600; }
+
+/* ===== SUN TRACKER TAB ===== */
+#sun-tracker-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+#sun-canvas-wrapper {
+  width: 100%;
+  max-width: 860px;
+  position: relative;
+  background: #000;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+}
+#sun-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+#sun-controls {
+  width: 100%;
+  max-width: 860px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.sun-ctrl-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.season-btns {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.season-btn {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  border-radius: var(--radius-sm);
+  padding: 7px 16px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.83rem;
+  font-weight: 500;
+  transition: all .15s;
+}
+.season-btn:hover { border-color: var(--border2); color: var(--text); }
+.season-btn.active { background: var(--gold3); color: #000; border-color: var(--gold3); font-weight: 600; }
+.time-slider-wrap {
+  flex: 1;
+  min-width: 180px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.time-label {
+  font-size: 0.82rem;
+  color: var(--gold);
+  font-weight: 600;
+  min-width: 46px;
+  text-align: right;
+}
+.play-btn {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--gold);
+  border-radius: var(--radius-sm);
+  width: 36px; height: 36px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.play-btn:hover { background: var(--bg4); border-color: var(--gold3); }
+#sun-info-cards {
+  width: 100%;
+  max-width: 860px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+}
+.sun-info-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  text-align: center;
+}
+.sun-info-card .card-val {
+  font-family: 'Lora', serif;
+  font-size: 1.6rem;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.sun-info-card .card-label { font-size: 0.75rem; color: var(--text3); text-transform: uppercase; letter-spacing: .04em; }
+#zone-legend {
+  width: 100%;
+  max-width: 860px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+}
+#zone-legend h4 {
+  font-size: 0.83rem;
+  color: var(--text2);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 7px;
+  font-size: 0.83rem;
+  color: var(--text);
+}
+.legend-swatch {
+  width: 18px; height: 18px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ===== BED PLANNER TAB ===== */
+#bed-planner-container { display: flex; flex-direction: column; gap: 14px; }
+.sub-view-btns { display:flex; gap:6px; border-bottom:1px solid var(--border); padding-bottom:12px; flex-wrap:wrap; }
+.sub-view-btn { background:var(--bg3); border:1px solid var(--border); color:var(--text2); border-radius:var(--radius-sm); padding:7px 18px; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:500; transition:all .15s; }
+.sub-view-btn:hover { color:var(--text); border-color:var(--border2); }
+.sub-view-btn.active { background:var(--gold3); color:#000; border-color:var(--gold3); }
+.stub-panel { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); padding:40px; text-align:center; color:var(--text3); }
+.stub-panel h3 { font-family:'Lora',serif; color:var(--text2); margin-bottom:8px; font-size:1.1rem; }
+.stub-panel p { font-size:.85rem; }
+/* Bed controls bar */
+.bed-ctrl-bar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:8px 0; }
+/* Garden layout */
+.garden-layout-outer { overflow-x:auto; }
+.garden-layout { display:flex; gap:0; align-items:flex-start; min-width:580px; }
+/* Zone label column */
+.zone-label-col { display:flex; flex-direction:column; width:68px; flex-shrink:0; padding-top:36px; }
+.zone-label-block { display:flex; align-items:center; justify-content:flex-end; padding-right:8px; font-size:.7rem; font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+.zone-label-block.full { color:rgba(255,220,50,.8); }
+.zone-label-block.part { color:rgba(100,210,100,.8); }
+.zone-label-block.shade { color:rgba(100,150,220,.8); }
+/* Container zone */
+.container-zone-wrap { display:flex; flex-direction:column; gap:0; border-right:2px dashed var(--border2); padding-right:12px; margin-right:12px; }
+.container-zone-title { font-size:.72rem; color:var(--text3); text-align:center; padding:4px 0 6px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+#container-canvas {
+  width:200px; background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-sm);
+  position:relative; overflow:hidden; cursor:crosshair;
+}
+#container-canvas .zone-band { position:absolute; left:0; right:0; pointer-events:none; display:flex; align-items:center; padding-left:4px; font-size:.65rem; font-weight:600; text-transform:uppercase; letter-spacing:.03em; }
+.container-item {
+  position:absolute; border-radius:4px; cursor:grab; display:flex; align-items:center; justify-content:center;
+  font-size:.65rem; font-weight:600; text-align:center; line-height:1.1; border:2px solid rgba(255,255,255,.25);
+  user-select:none; box-shadow:0 2px 6px rgba(0,0,0,.4); transition:box-shadow .1s;
+  word-break:break-word; overflow:hidden; padding:2px;
+}
+.container-item:active { cursor:grabbing; box-shadow:0 4px 14px rgba(0,0,0,.6); }
+.container-item.selected { border-color:var(--gold) !important; box-shadow:0 0 0 2px var(--gold3); }
+.container-add-bar { display:flex; gap:4px; flex-wrap:wrap; padding:6px 0 0; justify-content:center; }
+/* Beds */
+.beds-section { display:flex; gap:10px; }
+.bed-wrap { display:flex; flex-direction:column; }
+.bed-title-bar { text-align:center; font-size:.75rem; font-weight:600; color:var(--gold); padding:4px 0 6px; }
+.bed-grid { border-collapse:collapse; }
+.bed-grid th { font-size:.68rem; color:var(--text3); text-align:center; padding:2px 0 4px; width:34px; font-weight:600; }
+.bed-grid td {
+  width:34px; height:30px; border:1px solid rgba(255,255,255,.07); text-align:center;
+  font-size:.62rem; font-weight:600; cursor:pointer; position:relative; vertical-align:middle;
+  transition:filter .1s; overflow:hidden; padding:0 1px; line-height:1;
+}
+.bed-grid td:hover { filter:brightness(1.3); outline:2px solid var(--gold); outline-offset:-2px; z-index:2; }
+.bed-grid td.empty { background:var(--bg3); color:var(--text3); }
+.bed-grid td.zone-full { background:rgba(255,220,50,.06); }
+.bed-grid td.zone-part { background:rgba(100,210,100,.06); }
+.bed-grid td.zone-shade { background:rgba(100,150,220,.07); }
+.bed-grid tr.zone-divider td { border-top:2px solid rgba(255,255,255,.18) !important; }
+.bed-grid td.warn-zone { outline:2px solid var(--red) !important; outline-offset:-2px; }
+.bed-grid td.warn-companion { outline:2px solid var(--orange) !important; outline-offset:-2px; }
+.cell-icons { position:absolute; top:1px; right:1px; display:flex; gap:1px; }
+.cell-icon { width:6px; height:6px; border-radius:50%; }
+.cell-icon-trellis { background:var(--blue); }
+.cell-icon-succession { background:var(--green); }
+.cell-icon-companion { background:var(--gold3); }
+/* Trellis overlay */
+.bed-grid td.trellis-shade { background-image:repeating-linear-gradient(45deg,rgba(56,139,253,.12) 0,rgba(56,139,253,.12) 2px,transparent 2px,transparent 8px); }
+.bed-grid td.trellis-structure { background-image:repeating-linear-gradient(135deg,rgba(56,139,253,.25) 0,rgba(56,139,253,.25) 2px,transparent 2px,transparent 6px); }
+/* Auto-suggest */
+#auto-suggest-panel { display:flex; flex-direction:column; gap:16px; }
+.crop-checklist { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:6px; max-height:320px; overflow-y:auto; padding:12px; background:var(--bg3); border-radius:var(--radius-sm); border:1px solid var(--border); }
+.crop-check-item { display:flex; align-items:center; gap:7px; font-size:.82rem; cursor:pointer; padding:3px 0; }
+.crop-check-item:hover { color:var(--gold); }
+.crop-check-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.suggest-result { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); padding:14px; }
+/* Detail Modal */
+#detail-modal { display:none; position:fixed; inset:0; background:rgba(13,17,23,.85); z-index:400; align-items:flex-start; justify-content:flex-end; padding:0; }
+#detail-modal.open { display:flex; }
+#detail-panel {
+  background:var(--bg2); border-left:1px solid var(--border); width:360px; max-width:100vw;
+  height:100vh; overflow-y:auto; display:flex; flex-direction:column;
+  animation:slideIn .2s ease;
+}
+@keyframes slideIn { from { transform:translateX(100%); } to { transform:translateX(0); } }
+.detail-header { padding:16px 18px 12px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--bg2); z-index:10; }
+.detail-header h3 { font-family:'Lora',serif; font-size:.95rem; color:var(--gold); margin-bottom:2px; }
+.detail-header .detail-loc { font-size:.75rem; color:var(--text3); }
+.detail-close { position:absolute; top:14px; right:14px; background:none; border:none; color:var(--text2); cursor:pointer; font-size:1.1rem; }
+.detail-body { padding:14px 18px; flex:1; display:flex; flex-direction:column; gap:14px; }
+.detail-section { background:var(--bg3); border-radius:var(--radius-sm); padding:12px; border:1px solid var(--border); }
+.detail-section-title { font-size:.72rem; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:var(--text2); margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.detail-footer { padding:12px 18px; border-top:1px solid var(--border); display:flex; gap:8px; position:sticky; bottom:0; background:var(--bg2); }
+/* Timeline bar */
+.timeline-bar { height:16px; border-radius:4px; background:var(--bg4); position:relative; overflow:hidden; margin-top:6px; display:flex; }
+.timeline-seg { height:100%; position:absolute; border-radius:2px; }
+.timeline-labels { display:flex; justify-content:space-between; font-size:.62rem; color:var(--text3); margin-top:2px; }
+/* Warning pill */
+.warn-pill { display:inline-flex; align-items:center; gap:5px; padding:3px 8px; border-radius:10px; font-size:.75rem; font-weight:500; }
+.warn-pill.red { background:rgba(248,81,73,.15); color:var(--red); border:1px solid rgba(248,81,73,.3); }
+.warn-pill.orange { background:rgba(227,179,65,.15); color:var(--orange); border:1px solid rgba(227,179,65,.3); }
+/* Companion cards */
+.companion-cards { display:flex; flex-direction:column; gap:6px; }
+.companion-card { display:flex; align-items:center; gap:8px; padding:7px 9px; border-radius:var(--radius-sm); border:1px solid var(--border); cursor:pointer; font-size:.8rem; transition:all .15s; }
+.companion-card:hover { border-color:var(--gold3); background:var(--bg4); }
+.companion-card.selected { border-color:var(--gold3); background:rgba(201,164,58,.12); }
+/* Container picker */
+#container-picker { display:none; position:fixed; inset:0; background:rgba(13,17,23,.85); z-index:450; align-items:center; justify-content:center; }
+#container-picker.open { display:flex; }
+.cpicker-box { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:20px; max-width:340px; width:100%; box-shadow:var(--shadow-lg); }
+.cpicker-box h3 { font-family:'Lora',serif; color:var(--gold); margin-bottom:14px; }
+.cpicker-types { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.cpicker-type { padding:10px; border:1px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; text-align:center; font-size:.82rem; transition:all .15s; }
+.cpicker-type:hover { border-color:var(--gold3); background:var(--bg3); }
+
+/* ===== GREENHOUSE TAB ===== */
+/* stub for now */
+
+/* ===== GREENHOUSE TAB ===== */
+.gh-layout { display:flex; gap:16px; flex-wrap:wrap; }
+.gh-floor-col { flex:0 0 auto; }
+.gh-floor-canvas { border:1px solid var(--border); border-radius:var(--radius); display:block; }
+.gh-right-col { flex:1 1 340px; min-width:280px; }
+.gh-capacity { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); padding:12px 16px; margin-bottom:14px; display:flex; gap:24px; flex-wrap:wrap; align-items:flex-end; }
+.gh-cap-item { text-align:center; }
+.gh-cap-num { font-size:1.4rem; font-weight:700; color:var(--gold); font-family:'Lora',serif; line-height:1; }
+.gh-cap-num.warn { color:var(--red); }
+.gh-cap-label { font-size:.7rem; color:var(--text3); margin-top:2px; }
+.prop-table { width:100%; border-collapse:collapse; font-size:.78rem; }
+.prop-table th { background:var(--bg3); color:var(--text3); font-weight:600; text-align:left; padding:6px 8px; border-bottom:1px solid var(--border); white-space:nowrap; }
+.prop-table td { padding:5px 8px; border-bottom:1px solid var(--border2); vertical-align:middle; }
+.prop-table tr:hover td { background:rgba(255,255,255,.03); }
+.prop-table select { background:var(--bg3); border:1px solid var(--border); color:var(--text); border-radius:4px; padding:2px 4px; font-size:.75rem; }
+.prop-status { display:inline-block; padding:2px 7px; border-radius:10px; font-size:.68rem; font-weight:600; white-space:nowrap; }
+.ps-not-started { background:rgba(255,255,255,.07); color:var(--text3); }
+.ps-germinating { background:rgba(245,217,138,.15); color:var(--gold); }
+.ps-seedling { background:rgba(63,185,80,.15); color:var(--green); }
+.ps-ready { background:rgba(56,139,253,.15); color:var(--blue); }
+.ps-transplanted { background:rgba(88,166,255,.08); color:var(--text3); }
+.gh-item { position:absolute; border:2px solid rgba(245,217,138,.5); border-radius:4px; background:rgba(245,217,138,.1); font-size:.58rem; color:var(--text); cursor:move; user-select:none; display:flex; align-items:center; justify-content:center; text-align:center; overflow:hidden; box-sizing:border-box; }
+.gh-item:hover { border-color:var(--gold); background:rgba(245,217,138,.18); }
+.gh-item.selected { border-color:var(--blue); background:rgba(56,139,253,.1); }
+.gh-toolbar { display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-bottom:8px; }
+.gh-canvas-wrap { position:relative; display:inline-block; }
+
+/* ===== CALENDAR TAB ===== */
+.cal-header-bar { display:flex; gap:8px; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
+.cal-scroll-area { max-height:calc(100vh - 220px); overflow-y:auto; padding-right:4px; }
+.cal-layout { display:flex; flex-direction:column; gap:8px; }
+.cal-month { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+.cal-month-header { display:flex; align-items:center; gap:10px; padding:10px 16px; background:var(--bg3); cursor:pointer; user-select:none; }
+.cal-month-header:hover { background:rgba(255,255,255,.04); }
+.cal-month-name { font-family:'Lora',serif; font-size:.98rem; color:var(--text); flex:1; }
+.cal-month-count { font-size:.72rem; color:var(--text3); }
+.cal-collapse-icon { color:var(--text3); font-size:.75rem; transition:transform .2s; }
+.cal-month.collapsed .cal-collapse-icon { transform:rotate(-90deg); }
+.cal-month.collapsed .cal-month-body { display:none; }
+.cal-month-body { padding:12px 16px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+@media(max-width:700px) { .cal-month-body { grid-template-columns:1fr; } }
+.cal-sec-title { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--text3); margin-bottom:6px; padding-bottom:4px; border-bottom:1px solid var(--border2); }
+.cal-entry { display:flex; align-items:flex-start; gap:6px; padding:4px 0; font-size:.78rem; line-height:1.4; }
+.cal-entry-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+.cal-entry-text { flex:1; color:var(--text2); }
+.cal-entry.placed .cal-entry-text { color:var(--text3); }
+.cal-entry.placed .cal-entry-text::after { content:' ✓'; color:var(--green); font-weight:700; }
+.cal-empty { font-size:.76rem; color:var(--text3); font-style:italic; padding:4px 0; }
+
+/* ===== MARKET TAB ===== */
+.mkt-layout { display:flex; flex-direction:column; gap:14px; }
+.mkt-stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:10px; }
+.mkt-stat-card { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); padding:12px 14px; text-align:center; }
+.mkt-stat-num { font-size:1.4rem; font-weight:700; color:var(--gold); font-family:'Lora',serif; line-height:1.1; }
+.mkt-stat-label { font-size:.7rem; color:var(--text3); margin-top:2px; }
+.mkt-table { width:100%; border-collapse:collapse; font-size:.8rem; }
+.mkt-table th { background:var(--bg3); color:var(--text3); font-weight:600; text-align:left; padding:7px 10px; border-bottom:1px solid var(--border); white-space:nowrap; position:sticky; top:0; }
+.mkt-table td { padding:7px 10px; border-bottom:1px solid var(--border2); vertical-align:middle; }
+.mkt-table tr:hover td { background:rgba(255,255,255,.03); }
+.mkt-calendar-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(155px,1fr)); gap:8px; }
+.mkt-week-card { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); padding:10px 12px; }
+.mkt-week-title { font-weight:600; font-size:.78rem; color:var(--gold); margin-bottom:5px; }
+.mkt-week-item { font-size:.74rem; color:var(--text2); padding:1px 0; }
+.mkt-week-empty { font-size:.73rem; color:var(--text3); font-style:italic; }
+.mkt-gap-item { background:var(--bg2); border:1px solid rgba(248,81,73,.25); border-radius:var(--radius-sm); padding:7px 12px; font-size:.8rem; color:var(--text2); display:flex; gap:10px; align-items:center; }
+.mkt-gap-wk { font-weight:600; color:var(--red); flex-shrink:0; min-width:80px; }
+.mkt-day-btn { background:var(--bg3); border:1px solid var(--border); color:var(--text2); border-radius:var(--radius-sm); padding:4px 10px; cursor:pointer; font-size:.76rem; font-family:'DM Sans',sans-serif; }
+.mkt-day-btn.active { background:var(--gold3); color:#000; border-color:var(--gold3); font-weight:600; }
+.mkt-no-crops { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); padding:32px; text-align:center; color:var(--text3); font-size:.85rem; }
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  #app-header, #tab-bar, #sun-controls, #zone-legend, .header-btns,
+  #onboarding-overlay { display: none !important; }
+  body { background: #fff; color: #000; }
+  .tab-panel { display: block !important; padding: 0; }
+  #sun-canvas-wrapper { border: 1px solid #ccc; }
+  .card { border: 1px solid #ccc; }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 700px) {
+  .tab-btn { padding: 10px 10px; font-size: 0.78rem; }
+  .tab-btn .tab-label { display: none; }
+  #sun-info-cards { grid-template-columns: repeat(3, 1fr); }
+  .form-row { flex-direction: column; }
+}
+
+/* ===== TOOLTIP ===== */
+.tooltip-wrap { position: relative; }
+.tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1c2333;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.78rem;
+  color: var(--text);
+  white-space: nowrap;
+  z-index: 200;
+  box-shadow: var(--shadow);
+  pointer-events: none;
+}
+.tooltip-wrap:hover .tooltip { display: block; }
+
+/* ===== BADGE ===== */
+.badge {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+.badge-gold { background: rgba(245,217,138,.15); color: var(--gold); border: 1px solid rgba(245,217,138,.3); }
+.badge-green { background: rgba(63,185,80,.15); color: var(--green); border: 1px solid rgba(63,185,80,.3); }
+.badge-blue { background: rgba(56,139,253,.15); color: var(--blue); border: 1px solid rgba(56,139,253,.3); }
+.badge-red { background: rgba(248,81,73,.15); color: var(--red); border: 1px solid rgba(248,81,73,.3); }
+
+/* ===== DIVIDER ===== */
+.divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+/* ===== SECTION TITLE ===== */
+.section-title {
+  font-family: 'Lora', serif;
+  font-size: 1.05rem;
+  color: var(--text);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title .icon { font-size: 1.1rem; }
+</style>
+</head>
+<body>
+
+<!-- ===== ONBOARDING OVERLAY ===== -->
+<div id="onboarding-overlay">
+  <div id="onboarding-box">
+    <div id="onboarding-header">
+      <h2>🌿 Garden Planner Setup</h2>
+      <p>Let's get your garden configured for your region. Takes about 2 minutes.</p>
+      <div class="wizard-steps">
+        <div class="wizard-step-dot active" data-n="1" id="dot-1">Location</div>
+        <div class="wizard-step-dot" data-n="2" id="dot-2">Beds</div>
+        <div class="wizard-step-dot" data-n="3" id="dot-3">Greenhouse</div>
+        <div class="wizard-step-dot" data-n="4" id="dot-4">Market</div>
+      </div>
+    </div>
+    <div id="onboarding-body">
+      <!-- Step 1 -->
+      <div class="wizard-page active" id="wizard-step-1">
+        <h3>📍 Your Location & Frost Dates</h3>
+        <div class="form-group">
+          <label for="onb-location">Location Name</label>
+          <input type="text" id="onb-location" value="Cave Junction, OR" placeholder="e.g. Cave Junction, OR">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="onb-last-frost">Last Frost Date</label>
+            <input type="text" id="onb-last-frost" value="May 1" placeholder="May 1">
+          </div>
+          <div class="form-group">
+            <label for="onb-first-frost">First Frost Date</label>
+            <input type="text" id="onb-first-frost" value="November 15" placeholder="November 15">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="onb-zone">USDA Hardiness Zone</label>
+          <select id="onb-zone">
+            <option value="6a">Zone 6a</option><option value="6b">Zone 6b</option>
+            <option value="7a">Zone 7a</option><option value="7b">Zone 7b</option>
+            <option value="8a">Zone 8a</option><option value="8b" selected>Zone 8b (Default for Cave Junction, OR)</option>
+            <option value="9a">Zone 9a</option><option value="9b">Zone 9b</option>
+            <option value="10a">Zone 10a</option>
+          </select>
+        </div>
+      </div>
+      <!-- Step 2 -->
+      <div class="wizard-page" id="wizard-step-2">
+        <h3>🌱 Raised Beds</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="onb-num-beds">Number of Beds</label>
+            <input type="number" id="onb-num-beds" value="2" min="1" max="10">
+          </div>
+          <div class="form-group">
+            <label for="onb-bed-length">Length (ft)</label>
+            <input type="number" id="onb-bed-length" value="20" min="4" max="50">
+          </div>
+          <div class="form-group">
+            <label for="onb-bed-width">Width (ft)</label>
+            <input type="number" id="onb-bed-width" value="4" min="2" max="8">
+          </div>
+        </div>
+        <p style="font-size:.82rem;color:var(--text3);margin-top:8px;">Beds use the Square Foot Gardening (SFG) method — each square foot is one planting unit.</p>
+      </div>
+      <!-- Step 3 -->
+      <div class="wizard-page" id="wizard-step-3">
+        <h3>🪴 Greenhouse</h3>
+        <div class="form-group">
+          <label>Do you have a greenhouse?</label>
+          <div class="toggle-group">
+            <button class="active" id="onb-gh-yes" onclick="setGhToggle(true)">Yes</button>
+            <button id="onb-gh-no" onclick="setGhToggle(false)">No</button>
+          </div>
+        </div>
+        <div id="onb-gh-fields">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="onb-gh-length">Length (ft)</label>
+              <input type="number" id="onb-gh-length" value="20" min="6" max="100">
+            </div>
+            <div class="form-group">
+              <label for="onb-gh-width">Width (ft)</label>
+              <input type="number" id="onb-gh-width" value="10" min="6" max="50">
+            </div>
+            <div class="form-group">
+              <label for="onb-gh-windows">Windows</label>
+              <input type="number" id="onb-gh-windows" value="6" min="0" max="30">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Step 4 -->
+      <div class="wizard-page" id="wizard-step-4">
+        <h3>🛒 Growing for Farmers Market?</h3>
+        <p style="font-size:.85rem;color:var(--text2);margin-bottom:16px;">Enables the Market Planner tab with yield tracking and market calendars.</p>
+        <div class="toggle-group">
+          <button id="onb-mkt-yes" onclick="setMktToggle(true)">Yes — I sell at market</button>
+          <button class="active" id="onb-mkt-no" onclick="setMktToggle(false)">No — home garden only</button>
+        </div>
+      </div>
+    </div>
+    <div id="onboarding-footer">
+      <span class="onb-hint" id="onb-hint">Step 1 of 4</span>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-ghost" id="onb-back-btn" onclick="wizardBack()" style="display:none">Back</button>
+        <button class="btn btn-primary" id="onb-next-btn" onclick="wizardNext()">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="main-app" style="display:none">
+
+  <!-- Header -->
+  <header id="app-header">
+    <h1>🌿 Garden Planner <span id="header-location">Cave Junction, OR</span></h1>
+    <div class="header-btns">
+      <button class="btn-icon" onclick="openSettings()" title="Settings">⚙ Settings</button>
+      <button class="btn-icon" onclick="exportData()" title="Export Data">↓ Export</button>
+      <button class="btn-icon" onclick="window.print()" title="Print">🖨 Print</button>
+    </div>
+  </header>
+
+  <!-- Tab Bar -->
+  <nav id="tab-bar">
+    <button class="tab-btn active" data-tab="sun-tracker" onclick="switchTab('sun-tracker')">
+      <span class="tab-icon">☀️</span><span class="tab-label">Sun Tracker</span>
+    </button>
+    <button class="tab-btn" data-tab="bed-planner" onclick="switchTab('bed-planner')">
+      <span class="tab-icon">🌱</span><span class="tab-label">Bed &amp; Container</span>
+    </button>
+    <button class="tab-btn" data-tab="greenhouse" onclick="switchTab('greenhouse')">
+      <span class="tab-icon">🪴</span><span class="tab-label">Greenhouse</span>
+    </button>
+    <button class="tab-btn" data-tab="calendar" onclick="switchTab('calendar')">
+      <span class="tab-icon">📅</span><span class="tab-label">Planting Calendar</span>
+    </button>
+    <button class="tab-btn" data-tab="market" onclick="switchTab('market')" id="market-tab-btn" style="display:none">
+      <span class="tab-icon">🛒</span><span class="tab-label">Market Planner</span>
+    </button>
+  </nav>
+
+  <!-- ===== TAB 1: SUN TRACKER ===== -->
+  <section class="tab-panel active" id="tab-sun-tracker">
+    <div id="sun-tracker-container">
+
+      <div id="sun-canvas-wrapper">
+        <canvas id="sun-canvas" width="860" height="520"></canvas>
+      </div>
+
+      <div id="sun-controls">
+        <div class="sun-ctrl-row">
+          <div class="season-btns">
+            <button class="season-btn active" data-season="summer" onclick="setSeason('summer')">☀ Summer</button>
+            <button class="season-btn" data-season="spring" onclick="setSeason('spring')">🌸 Spring</button>
+            <button class="season-btn" data-season="fall" onclick="setSeason('fall')">🍂 Fall</button>
+            <button class="season-btn" data-season="winter" onclick="setSeason('winter')">❄ Winter</button>
+          </div>
+          <button class="play-btn" id="play-pause-btn" onclick="toggleAnimation()" title="Play/Pause">▶</button>
+        </div>
+        <div class="sun-ctrl-row">
+          <span style="font-size:.8rem;color:var(--text3);white-space:nowrap;">5 am</span>
+          <div class="time-slider-wrap">
+            <input type="range" id="time-slider" min="5" max="21" step="0.1" value="12"
+              oninput="setTimeFromSlider(this.value)">
+          </div>
+          <span style="font-size:.8rem;color:var(--text3);white-space:nowrap;">9 pm</span>
+          <span class="time-label" id="time-display">12:00 pm</span>
+        </div>
+      </div>
+
+      <div id="sun-info-cards">
+        <div class="sun-info-card">
+          <div class="card-val" id="info-elevation">0°</div>
+          <div class="card-label">Sun Elevation</div>
+        </div>
+        <div class="sun-info-card">
+          <div class="card-val" id="info-back">0%</div>
+          <div class="card-label">Back Bed Sunlit</div>
+        </div>
+        <div class="sun-info-card">
+          <div class="card-val" id="info-mid">0%</div>
+          <div class="card-label">Middle Sunlit</div>
+        </div>
+        <div class="sun-info-card">
+          <div class="card-val" id="info-front">0%</div>
+          <div class="card-label">Front Sunlit</div>
+        </div>
+        <div class="sun-info-card">
+          <div class="card-val" id="info-hours">0 hrs</div>
+          <div class="card-label">Est. Sun Hours</div>
+        </div>
+      </div>
+
+      <div id="zone-legend">
+        <h4>Garden Sun Zones — Cave Junction, OR (Lat 42.14°N)</h4>
+        <div class="legend-row">
+          <div class="legend-swatch" style="background:rgba(255,220,50,.22);border:1px solid rgba(255,220,50,.4)"></div>
+          <strong>Full Sun Zone (Back/North)</strong> — 8–10 hrs summer, 3–4 hrs winter
+        </div>
+        <div class="legend-row">
+          <div class="legend-swatch" style="background:rgba(100,200,100,.18);border:1px solid rgba(100,200,100,.35)"></div>
+          <strong>Part Sun Zone (Middle)</strong> — 5–6 hrs summer, 1–2 hrs winter
+        </div>
+        <div class="legend-row">
+          <div class="legend-swatch" style="background:rgba(80,120,200,.18);border:1px solid rgba(80,120,200,.35)"></div>
+          <strong>Shade Zone (Front/South)</strong> — 2–3 hrs summer, 0–1 hr winter
+        </div>
+        <div class="legend-row" style="margin-top:10px;color:var(--text3);">
+          <div class="legend-swatch" style="background:rgba(0,100,255,.15);border:1px solid rgba(0,100,255,.3)"></div>
+          Trellis shade footprint (when trellis layer active)
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== TAB 2: BED & CONTAINER PLANNER ===== -->
+  <section class="tab-panel" id="tab-bed-planner">
+    <div id="bed-planner-container">
+      <div class="sub-view-btns">
+        <button class="sub-view-btn active" onclick="setBedView('manual')">Manual View</button>
+        <button class="sub-view-btn" onclick="setBedView('auto')">✨ Auto-Suggest</button>
+      </div>
+
+      <!-- MANUAL VIEW -->
+      <div id="bed-manual-view">
+        <div class="bed-ctrl-bar">
+          <button class="btn btn-secondary btn-sm" id="trellis-toggle-btn" onclick="toggleTrellisLayer()">Show Trellis Layer</button>
+          <div style="display:flex;gap:6px;align-items:center;margin-left:auto;flex-wrap:wrap;font-size:.78rem;color:var(--text3);">
+            <span style="display:inline-block;width:10px;height:10px;background:rgba(255,220,50,.3);border-radius:2px;border:1px solid rgba(255,220,50,.5)"></span>Full Sun (rows 1–10)
+            <span style="display:inline-block;width:10px;height:10px;background:rgba(100,210,100,.25);border-radius:2px;border:1px solid rgba(100,210,100,.45)" style="margin-left:8px"></span>Part Sun (rows 11–16)
+            <span style="display:inline-block;width:10px;height:10px;background:rgba(100,150,220,.25);border-radius:2px;border:1px solid rgba(100,150,220,.45)"></span>Shade (rows 17–20)
+          </div>
+        </div>
+        <div class="garden-layout-outer">
+          <div class="garden-layout">
+            <!-- Zone labels -->
+            <div class="zone-label-col" id="zone-label-col"></div>
+            <!-- Container zone -->
+            <div class="container-zone-wrap">
+              <div class="container-zone-title">Container Zone</div>
+              <div id="container-canvas"></div>
+              <div class="container-add-bar">
+                <button class="btn btn-secondary btn-sm" onclick="openContainerPicker()">+ Container</button>
+                <button class="btn btn-ghost btn-sm" onclick="clearAllContainers()" title="Clear all containers">🗑</button>
+              </div>
+            </div>
+            <!-- Beds -->
+            <div class="beds-section">
+              <div class="bed-wrap">
+                <div class="bed-title-bar">Bed A (West)</div>
+                <table class="bed-grid" id="bed-grid-A"></table>
+              </div>
+              <div class="bed-wrap">
+                <div class="bed-title-bar">Bed B (East)</div>
+                <table class="bed-grid" id="bed-grid-B"></table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- end manual view -->
+
+      <!-- AUTO-SUGGEST VIEW -->
+      <div id="bed-auto-view" style="display:none">
+        <div id="auto-suggest-panel">
+          <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;">
+            <div style="flex:1;min-width:260px;">
+              <div class="section-title"><span class="icon">🌿</span>Select Crops to Grow</div>
+              <div style="display:flex;gap:6px;margin-bottom:8px;">
+                <button class="btn btn-ghost btn-sm" onclick="selectAllCrops()">Select All</button>
+                <button class="btn btn-ghost btn-sm" onclick="selectNoneCrops()">Clear</button>
+                <input type="text" id="crop-search-filter" placeholder="Filter crops…" style="flex:1;max-width:180px;" oninput="filterCropList()">
+              </div>
+              <div class="crop-checklist" id="crop-checklist"></div>
+            </div>
+            <div style="min-width:200px;">
+              <div class="section-title"><span class="icon">🪣</span>Containers</div>
+              <div style="display:flex;flex-direction:column;gap:8px;" id="container-qty-inputs">
+                <div style="display:flex;align-items:center;justify-content:space-between;font-size:.83rem;"><span>1 Gallon (6"×6")</span><input type="number" id="qty-1gal" value="0" min="0" max="20" style="width:54px"></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;font-size:.83rem;"><span>2 Gallon (8"×8")</span><input type="number" id="qty-2gal" value="0" min="0" max="20" style="width:54px"></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;font-size:.83rem;"><span>5 Gallon (12"×12")</span><input type="number" id="qty-5gal" value="0" min="0" max="20" style="width:54px"></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;font-size:.83rem;"><span>20 Gallon (24"×24")</span><input type="number" id="qty-20gal" value="0" min="0" max="10" style="width:54px"></div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:4px;">
+            <button class="btn btn-primary" onclick="runAutoSuggest()">✨ Generate Layout</button>
+            <button class="btn btn-ghost" id="accept-all-btn" style="display:none" onclick="acceptAllSuggestions()">✓ Accept All</button>
+            <button class="btn btn-ghost" id="reject-all-btn" style="display:none" onclick="rejectAllSuggestions()">✕ Reject</button>
+          </div>
+          <div class="suggest-result" id="suggest-result" style="display:none">
+            <div id="suggest-summary" style="font-size:.85rem;color:var(--text2);margin-bottom:10px;"></div>
+            <div id="suggest-list" style="display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto;"></div>
+          </div>
+        </div>
+      </div><!-- end auto view -->
+
+    </div>
+  </section>
+
+  <!-- ===== TAB 3: GREENHOUSE ===== -->
+  <section class="tab-panel" id="tab-greenhouse">
+    <div class="gh-layout">
+      <div class="gh-floor-col">
+        <div class="section-title"><span class="icon">🏠</span>Floor Plan (20 × 10 ft)</div>
+        <div class="gh-toolbar">
+          <button class="btn btn-sm" onclick="addGhItem('flat')">+ Seed Flat</button>
+          <button class="btn btn-sm" onclick="addGhItem('staging')">+ Pot Staging</button>
+          <button class="btn btn-sm" onclick="addGhItem('propzone')">+ Prop Zone</button>
+          <button class="btn btn-sm btn-ghost" onclick="clearGhFloor()">Clear Floor</button>
+        </div>
+        <div class="gh-canvas-wrap">
+          <canvas id="gh-canvas" class="gh-floor-canvas" width="400" height="200"></canvas>
+          <div id="gh-items-layer" style="position:absolute;top:0;left:0;width:400px;height:200px;pointer-events:none;"></div>
+        </div>
+        <div style="font-size:.7rem;color:var(--text3);margin-top:5px;">Click canvas to place · Drag to reposition · Right-click to remove</div>
+      </div>
+      <div class="gh-right-col">
+        <div id="gh-capacity-bar" class="gh-capacity"></div>
+        <div class="section-title"><span class="icon">🌿</span>Propagation Tracker
+          <button class="btn btn-sm btn-ghost" style="margin-left:auto;font-size:.72rem" onclick="buildPropTracker()">↻ Refresh</button>
+        </div>
+        <div style="overflow-x:auto;max-height:calc(100vh - 280px);overflow-y:auto;">
+          <table class="prop-table" id="prop-tracker-table">
+            <thead><tr>
+              <th>Crop &amp; Variety</th>
+              <th>GH Start</th>
+              <th>Wks</th>
+              <th>Cells</th>
+              <th>Flats</th>
+              <th>Transplant</th>
+              <th>Status</th>
+              <th>Notes</th>
+            </tr></thead>
+            <tbody id="prop-tracker-body">
+              <tr><td colspan="8" style="text-align:center;color:var(--text3);padding:20px;font-size:.82rem;">Add crops to Bed Planner to see propagation schedule</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TAB 4: PLANTING CALENDAR ===== -->
+  <section class="tab-panel" id="tab-calendar">
+    <div class="cal-header-bar">
+      <div class="section-title" style="border:none;margin:0;padding:0;font-size:1rem"><span class="icon">📅</span>Cave Junction Planting Calendar (Zone 8b)</div>
+      <button class="btn btn-sm btn-ghost" onclick="expandAllMonths()">Expand All</button>
+      <button class="btn btn-sm btn-ghost" onclick="collapseAllMonths()">Collapse All</button>
+    </div>
+    <div class="cal-scroll-area">
+      <div class="cal-layout" id="cal-layout"></div>
+    </div>
+  </section>
+
+  <!-- ===== TAB 5: MARKET PLANNER ===== -->
+  <section class="tab-panel" id="tab-market">
+    <div class="mkt-layout">
+      <div id="mkt-stats" class="mkt-stats"></div>
+      <div class="section-title"><span class="icon">📋</span>Yield Tracker
+        <button class="btn btn-sm btn-ghost" style="margin-left:auto;font-size:.72rem" onclick="buildMarketTab()">↻ Refresh</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="mkt-table">
+          <thead><tr>
+            <th>Crop &amp; Variety</th>
+            <th>Bed / Container</th>
+            <th>Plants</th>
+            <th>Yield / Plant</th>
+            <th>Total Expected</th>
+            <th>Harvest Start</th>
+            <th>Harvest End</th>
+            <th>Ready ✓</th>
+          </tr></thead>
+          <tbody id="mkt-yield-body"></tbody>
+        </table>
+      </div>
+      <div class="section-title" style="margin-top:4px">
+        <span class="icon">📆</span>Market Calendar
+        <div style="display:flex;gap:6px;align-items:center;margin-left:auto">
+          <span style="font-size:.75rem;color:var(--text3)">Market days:</span>
+          <button class="mkt-day-btn" data-day="Sat" onclick="toggleMarketDay('Sat',this)">Sat</button>
+          <button class="mkt-day-btn" data-day="Sun" onclick="toggleMarketDay('Sun',this)">Sun</button>
+          <button class="mkt-day-btn" data-day="Wed" onclick="toggleMarketDay('Wed',this)">Wed</button>
+          <button class="mkt-day-btn" data-day="Fri" onclick="toggleMarketDay('Fri',this)">Fri</button>
+        </div>
+      </div>
+      <div id="mkt-calendar-grid" class="mkt-calendar-grid"></div>
+      <div class="section-title" style="margin-top:4px"><span class="icon">⚠️</span>Gaps Analysis</div>
+      <div id="mkt-gaps" style="display:flex;flex-direction:column;gap:6px;"></div>
+    </div>
+  </section>
+
+
+<!-- ===== SQUARE DETAIL PANEL ===== -->
+<div id="detail-modal">
+  <div style="flex:1" onclick="closeDetailModal()"></div>
+  <div id="detail-panel">
+    <div class="detail-header">
+      <h3 id="detail-title">Square Details</h3>
+      <div class="detail-loc" id="detail-loc"></div>
+      <button class="detail-close" onclick="closeDetailModal()">✕</button>
+    </div>
+    <div class="detail-body">
+
+      <!-- PHASE 1: MAIN CROP -->
+      <div class="detail-section">
+        <div class="detail-section-title">🌿 Phase 1 — Main Crop</div>
+        <div class="form-group">
+          <label>Crop</label>
+          <input type="text" id="dp-crop-search" placeholder="Search crop…" oninput="filterDetailCrops()" autocomplete="off">
+          <div id="dp-crop-dropdown" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);max-height:160px;overflow-y:auto;margin-top:3px;"></div>
+        </div>
+        <div id="dp-crop-info" style="display:none;font-size:.78rem;line-height:1.7;color:var(--text2);background:var(--bg4);border-radius:var(--radius-sm);padding:8px 10px;margin-bottom:8px;"></div>
+        <div id="dp-zone-warn" style="display:none;" class="warn-pill red" style="margin-bottom:8px;">⚠ Zone mismatch</div>
+        <div id="dp-trellis-row" style="display:none;margin-bottom:8px;">
+          <label style="font-size:.78rem;color:var(--text2);">Trellis Type</label>
+          <select id="dp-trellis-type" style="margin-top:3px;">
+            <option value="vertical">Vertical Trellis</option>
+            <option value="horizontal">Horizontal Trellis</option>
+            <option value="espalier">Espalier</option>
+            <option value="stake">Stake</option>
+            <option value="cage">Cage</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;color:var(--text);">
+            <input type="checkbox" id="dp-market"> Market crop
+          </label>
+        </div>
+      </div>
+
+      <!-- COMPANION -->
+      <div class="detail-section">
+        <div class="detail-section-title">🤝 Phase 1 Companion</div>
+        <div class="companion-cards" id="dp-companion-cards">
+          <div style="font-size:.78rem;color:var(--text3);">Select a main crop to see companion suggestions.</div>
+        </div>
+        <div id="dp-companion-conflict" style="display:none;margin-top:6px;" class="warn-pill orange">⚠ Companion conflict</div>
+      </div>
+
+      <!-- PHASE 2: SUCCESSION -->
+      <div class="detail-section">
+        <div class="detail-section-title">🔁 Phase 2 — Succession</div>
+        <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;cursor:pointer;margin-bottom:10px;">
+          <input type="checkbox" id="dp-p2-enable" onchange="togglePhase2()"> Enable succession planting
+        </label>
+        <div id="dp-phase2-fields" style="display:none">
+          <div class="form-group">
+            <label>Phase 1 clear date</label>
+            <input type="text" id="dp-p1-clear" placeholder="e.g. August 1" style="font-size:.82rem;">
+          </div>
+          <div class="form-group">
+            <label>Phase 2 Crop</label>
+            <input type="text" id="dp-p2-search" placeholder="Search crop…" oninput="filterDetailCropsP2()" autocomplete="off">
+            <div id="dp-p2-dropdown" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);max-height:130px;overflow-y:auto;margin-top:3px;"></div>
+          </div>
+          <div id="dp-p2-info" style="display:none;font-size:.78rem;color:var(--text2);background:var(--bg4);border-radius:var(--radius-sm);padding:8px 10px;margin-bottom:8px;"></div>
+          <div style="margin-top:4px;">
+            <div style="font-size:.72rem;color:var(--text3);margin-bottom:4px;">Timeline (Mar–Nov)</div>
+            <div class="timeline-bar" id="dp-timeline-bar"></div>
+            <div class="timeline-labels"><span>Mar</span><span>May</span><span>Jul</span><span>Sep</span><span>Nov</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOIL & NUTRIENTS -->
+      <div class="detail-section">
+        <div class="detail-section-title">🪱 Soil &amp; Nutrients</div>
+        <div id="dp-soil-info" style="font-size:.8rem;color:var(--text2);line-height:1.6;">Select a crop to see soil recommendations.</div>
+      </div>
+
+      <!-- NOTES -->
+      <div class="detail-section">
+        <div class="detail-section-title">📝 Notes</div>
+        <textarea id="dp-notes" rows="3" style="font-size:.82rem;" placeholder="Add notes for this square…"></textarea>
+      </div>
+
+    </div><!-- end detail-body -->
+    <div class="detail-footer">
+      <button class="btn btn-secondary" style="flex:0;padding:7px 12px;" onclick="clearDetailCell()">Clear</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="saveDetailCell()">Save Square</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CONTAINER PICKER ===== -->
+<div id="container-picker">
+  <div style="flex:1" onclick="closeContainerPicker()"></div>
+  <div class="cpicker-box">
+    <h3 style="margin-bottom:12px;">Add Container</h3>
+    <div class="cpicker-types">
+      <div class="cpicker-type" onclick="addContainer('1gal')">
+        <div style="font-size:1.4rem;margin-bottom:4px;">🪣</div>
+        <strong>1 Gallon</strong><br>
+        <span style="color:var(--text3);font-size:.74rem;">6"×6" · 1 small plant<br>or 4 tiny herbs</span>
+      </div>
+      <div class="cpicker-type" onclick="addContainer('2gal')">
+        <div style="font-size:1.4rem;margin-bottom:4px;">🪣</div>
+        <strong>2 Gallon</strong><br>
+        <span style="color:var(--text3);font-size:.74rem;">8"×8" · 1 medium plant</span>
+      </div>
+      <div class="cpicker-type" onclick="addContainer('5gal')">
+        <div style="font-size:1.6rem;margin-bottom:4px;">🪣</div>
+        <strong>5 Gallon</strong><br>
+        <span style="color:var(--text3);font-size:.74rem;">12"×12" · 1 SFG square</span>
+      </div>
+      <div class="cpicker-type" onclick="addContainer('20gal')">
+        <div style="font-size:1.8rem;margin-bottom:4px;">🪣</div>
+        <strong>20 Gallon</strong><br>
+        <span style="color:var(--text3);font-size:.74rem;">24"×24" · 4 SFG squares</span>
+      </div>
+    </div>
+    <div style="margin-top:12px;text-align:right;">
+      <button class="btn btn-ghost btn-sm" onclick="closeContainerPicker()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- end #main-app -->
+
+<!-- ===== SETTINGS MODAL ===== -->
+<div id="settings-modal" style="display:none;position:fixed;inset:0;background:rgba(13,17,23,.88);z-index:500;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;max-width:460px;width:100%;box-shadow:var(--shadow-lg);">
+    <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+      <h3 style="font-family:'Lora',serif;color:var(--gold);">⚙ Settings</h3>
+      <button onclick="closeSettings()" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:1.2rem;">✕</button>
+    </div>
+    <div style="padding:20px 24px;">
+      <div class="form-group">
+        <label for="set-location">Location Name</label>
+        <input type="text" id="set-location" placeholder="Cave Junction, OR">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="set-last-frost">Last Frost Date</label>
+          <input type="text" id="set-last-frost" placeholder="May 1">
+        </div>
+        <div class="form-group">
+          <label for="set-first-frost">First Frost Date</label>
+          <input type="text" id="set-first-frost" placeholder="November 15">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="set-zone">USDA Zone</label>
+        <select id="set-zone">
+          <option value="6a">Zone 6a</option><option value="6b">Zone 6b</option>
+          <option value="7a">Zone 7a</option><option value="7b">Zone 7b</option>
+          <option value="8a">Zone 8a</option><option value="8b" selected>Zone 8b</option>
+          <option value="9a">Zone 9a</option><option value="9b">Zone 9b</option>
+          <option value="10a">Zone 10a</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" id="set-market" style="margin-right:6px">
+          Growing for farmers market
+        </label>
+      </div>
+      <div style="margin-top:6px;padding-top:14px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;">
+        <button class="btn btn-ghost" onclick="closeSettings()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+      </div>
+      <hr class="divider">
+      <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;">
+        <span style="font-size:.8rem;color:var(--text3);">Reset all data (cannot be undone)</span>
+        <button class="btn btn-sm" style="background:var(--red2);color:#fff;border:none;" onclick="resetAllData()">Reset Data</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================================================
+// APP STATE & LOCALSTORAGE
+// =====================================================
+const STORAGE_KEY = 'gp_v1';
+
+const defaultState = {
+  location: 'Cave Junction, OR',
+  lastFrost: 'May 1',
+  firstFrost: 'November 15',
+  zone: '8b',
+  numBeds: 2,
+  bedLength: 20,
+  bedWidth: 4,
+  hasGreenhouse: true,
+  ghLength: 20,
+  ghWidth: 10,
+  ghWindows: 6,
+  growingForMarket: false,
+  beds: {},          // bed data keyed by "bedLetter-row-col"
+  containers: [],    // container objects
+  trellisStructures: [],
+  greenhouseItems: [],
+  propagationData: {},
+  onboardingDone: false
+};
+
+let state = loadState();
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return Object.assign({}, defaultState, JSON.parse(raw));
+  } catch(e) {}
+  return Object.assign({}, defaultState);
+}
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+function autoSave() { saveState(); }
+
+// =====================================================
+// ONBOARDING WIZARD
+// =====================================================
+let wizardStep = 1;
+let ghToggle = true;
+let mktToggle = false;
+
+function setGhToggle(val) {
+  ghToggle = val;
+  document.getElementById('onb-gh-yes').classList.toggle('active', val);
+  document.getElementById('onb-gh-no').classList.toggle('active', !val);
+  document.getElementById('onb-gh-fields').style.display = val ? '' : 'none';
+}
+
+function setMktToggle(val) {
+  mktToggle = val;
+  document.getElementById('onb-mkt-yes').classList.toggle('active', val);
+  document.getElementById('onb-mkt-no').classList.toggle('active', !val);
+}
+
+function wizardNext() {
+  if (wizardStep === 4) { finishWizard(); return; }
+  document.getElementById('wizard-step-' + wizardStep).classList.remove('active');
+  document.getElementById('dot-' + wizardStep).classList.remove('active');
+  document.getElementById('dot-' + wizardStep).classList.add('done');
+  wizardStep++;
+  document.getElementById('wizard-step-' + wizardStep).classList.add('active');
+  document.getElementById('dot-' + wizardStep).classList.add('active');
+  document.getElementById('onb-hint').textContent = 'Step ' + wizardStep + ' of 4';
+  document.getElementById('onb-back-btn').style.display = wizardStep > 1 ? '' : 'none';
+  document.getElementById('onb-next-btn').textContent = wizardStep === 4 ? 'Start Planning 🌿' : 'Next →';
+}
+
+function wizardBack() {
+  if (wizardStep <= 1) return;
+  document.getElementById('wizard-step-' + wizardStep).classList.remove('active');
+  document.getElementById('dot-' + wizardStep).classList.remove('active');
+  wizardStep--;
+  document.getElementById('wizard-step-' + wizardStep).classList.add('active');
+  document.getElementById('dot-' + wizardStep).classList.remove('done');
+  document.getElementById('dot-' + wizardStep).classList.add('active');
+  document.getElementById('onb-hint').textContent = 'Step ' + wizardStep + ' of 4';
+  document.getElementById('onb-back-btn').style.display = wizardStep > 1 ? '' : 'none';
+  document.getElementById('onb-next-btn').textContent = 'Next →';
+}
+
+function finishWizard() {
+  state.location = document.getElementById('onb-location').value || 'Cave Junction, OR';
+  state.lastFrost = document.getElementById('onb-last-frost').value || 'May 1';
+  state.firstFrost = document.getElementById('onb-first-frost').value || 'November 15';
+  state.zone = document.getElementById('onb-zone').value || '8b';
+  state.numBeds = parseInt(document.getElementById('onb-num-beds').value) || 2;
+  state.bedLength = parseInt(document.getElementById('onb-bed-length').value) || 20;
+  state.bedWidth = parseInt(document.getElementById('onb-bed-width').value) || 4;
+  state.hasGreenhouse = ghToggle;
+  if (ghToggle) {
+    state.ghLength = parseInt(document.getElementById('onb-gh-length').value) || 20;
+    state.ghWidth = parseInt(document.getElementById('onb-gh-width').value) || 10;
+    state.ghWindows = parseInt(document.getElementById('onb-gh-windows').value) || 6;
+  }
+  state.growingForMarket = mktToggle;
+  state.onboardingDone = true;
+  saveState();
+  launchApp();
+}
+
+function launchApp() {
+  document.getElementById('onboarding-overlay').style.display = 'none';
+  document.getElementById('main-app').style.display = '';
+  document.getElementById('header-location').textContent = state.location;
+  if (state.growingForMarket) {
+    document.getElementById('market-tab-btn').style.display = '';
+  }
+  initSunTracker();
+  initBedPlanner();
+}
+
+// =====================================================
+// SETTINGS MODAL
+// =====================================================
+function openSettings() {
+  document.getElementById('set-location').value = state.location;
+  document.getElementById('set-last-frost').value = state.lastFrost;
+  document.getElementById('set-first-frost').value = state.firstFrost;
+  document.getElementById('set-zone').value = state.zone;
+  document.getElementById('set-market').checked = state.growingForMarket;
+  const m = document.getElementById('settings-modal');
+  m.style.display = 'flex';
+}
+function closeSettings() {
+  document.getElementById('settings-modal').style.display = 'none';
+}
+function saveSettings() {
+  state.location = document.getElementById('set-location').value;
+  state.lastFrost = document.getElementById('set-last-frost').value;
+  state.firstFrost = document.getElementById('set-first-frost').value;
+  state.zone = document.getElementById('set-zone').value;
+  state.growingForMarket = document.getElementById('set-market').checked;
+  document.getElementById('header-location').textContent = state.location;
+  document.getElementById('market-tab-btn').style.display = state.growingForMarket ? '' : 'none';
+  saveState();
+  closeSettings();
+}
+function resetAllData() {
+  if (!confirm('Reset ALL garden data? This cannot be undone.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+function exportData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'garden-planner-export.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// =====================================================
+// TAB SWITCHING
+// =====================================================
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + tabId));
+  if (tabId === 'greenhouse') initGreenhousePlanner();
+  if (tabId === 'calendar') initCalendar();
+  if (tabId === 'market') initMarketPlanner();
+}
+
+function setBedView(view) {
+  document.querySelectorAll('.sub-view-btn').forEach((b,i) => b.classList.toggle('active', (i===0&&view==='manual')||(i===1&&view==='auto')));
+  document.getElementById('bed-manual-view').style.display = view === 'manual' ? '' : 'none';
+  document.getElementById('bed-auto-view').style.display = view === 'auto' ? '' : 'none';
+}
+
+// =====================================================
+// SUN TRACKER — CORE MATH
+// =====================================================
+const LAT_DEG = 42.14;
+const LAT = LAT_DEG * Math.PI / 180;
+
+const SEASON_DECL = { summer: 23.5, spring: 0, fall: -5, winter: -23.5 };
+const SEASON_SUNRISE = { summer: 5.8, spring: 6.5, fall: 7.2, winter: 7.8 };
+const SEASON_SUNSET  = { summer: 20.5, spring: 19.5, fall: 18.5, winter: 17.2 };
+
+// Sun hours per zone per season [back, mid, front]
+const SEASON_SUN_HOURS = {
+  summer: { back: '8–10 hrs', mid: '5–6 hrs', front: '2–3 hrs', backPct:90, midPct:55, frontPct:28 },
+  spring: { back: '6–7 hrs', mid: '3–4 hrs', front: '1–2 hrs', backPct:65, midPct:38, frontPct:15 },
+  fall:   { back: '4–5 hrs', mid: '2–3 hrs', front: '1 hr',    backPct:45, midPct:25, frontPct:10 },
+  winter: { back: '3–4 hrs', mid: '1–2 hrs', front: '0–1 hr',  backPct:35, midPct:15, frontPct:5  }
+};
+
+function solarElevation(hourDecimal, declinationDeg) {
+  const decl = declinationDeg * Math.PI / 180;
+  // Hour angle: solar noon = 0, morning negative, afternoon positive
+  const hourAngle = (hourDecimal - 12) * 15 * Math.PI / 180;
+  const sinElev = Math.sin(LAT) * Math.sin(decl) + Math.cos(LAT) * Math.cos(decl) * Math.cos(hourAngle);
+  return Math.asin(Math.max(-1, Math.min(1, sinElev))) * 180 / Math.PI;
+}
+
+function sunAzimuth(hourDecimal, declinationDeg) {
+  const decl = declinationDeg * Math.PI / 180;
+  const hourAngle = (hourDecimal - 12) * 15 * Math.PI / 180;
+  const sinElev = Math.sin(LAT) * Math.sin(decl) + Math.cos(LAT) * Math.cos(decl) * Math.cos(hourAngle);
+  const elev = Math.asin(Math.max(-1, Math.min(1, sinElev)));
+  const cosAz = (Math.sin(decl) - Math.sin(LAT) * Math.sin(elev)) / (Math.cos(LAT) * Math.cos(elev));
+  let az = Math.acos(Math.max(-1, Math.min(1, cosAz))) * 180 / Math.PI;
+  if (hourDecimal > 12) az = 360 - az;
+  return az; // 0=N, 90=E, 180=S, 270=W
+}
+
+// =====================================================
+// SUN TRACKER — CANVAS RENDERING
+// =====================================================
+let sunState = {
+  season: 'summer',
+  time: 12.0,
+  playing: false,
+  animFrame: null,
+  lastTs: null
+};
+
+const CANVAS_W = 860;
+const CANVAS_H = 520;
+
+// Layout constants
+const GROUND_Y = 370;
+const BED_ZONE_TOP = 285;     // top of back (north) bed
+const BED_ZONE_MID = 320;     // mid-zone boundary
+const BED_ZONE_BOT = 355;     // front of south bed / shade start
+const BED_SCENE_LEFT = 180;
+const BED_SCENE_RIGHT = 720;
+const NORTH_TREE_X = 100;
+const WEST_TREE_X = 50;
+
+function initSunTracker() {
+  drawSunScene();
+}
+
+function setSeason(s) {
+  sunState.season = s;
+  document.querySelectorAll('.season-btn').forEach(b => b.classList.toggle('active', b.dataset.season === s));
+  updateSunInfo();
+  drawSunScene();
+}
+
+function setTimeFromSlider(val) {
+  sunState.time = parseFloat(val);
+  updateTimeDisplay();
+  updateSunInfo();
+  drawSunScene();
+}
+
+function updateTimeDisplay() {
+  const h = Math.floor(sunState.time);
+  const m = Math.round((sunState.time - h) * 60);
+  const ampm = h < 12 ? 'am' : 'pm';
+  const disp = (h === 0 ? 12 : h > 12 ? h - 12 : h) + ':' + String(m).padStart(2,'0') + ' ' + ampm;
+  document.getElementById('time-display').textContent = disp;
+}
+
+function toggleAnimation() {
+  sunState.playing = !sunState.playing;
+  document.getElementById('play-pause-btn').textContent = sunState.playing ? '⏸' : '▶';
+  if (sunState.playing) {
+    sunState.lastTs = null;
+    requestAnimationFrame(animateSun);
+  }
+}
+
+function animateSun(ts) {
+  if (!sunState.playing) return;
+  if (sunState.lastTs !== null) {
+    const dt = (ts - sunState.lastTs) / 1000; // seconds
+    sunState.time += dt * 0.6; // 0.6 hours per real second = ~27min real time = 1 day
+    if (sunState.time > 21) sunState.time = 5;
+    document.getElementById('time-slider').value = sunState.time;
+    updateTimeDisplay();
+    updateSunInfo();
+    drawSunScene();
+  }
+  sunState.lastTs = ts;
+  requestAnimationFrame(animateSun);
+}
+
+function updateSunInfo() {
+  const decl = SEASON_DECL[sunState.season];
+  const elev = solarElevation(sunState.time, decl);
+  const sh = SEASON_SUN_HOURS[sunState.season];
+  // Modulate % sunlit by current sun elevation (above horizon = more lit)
+  const elevFactor = Math.max(0, Math.min(1, elev / 60));
+  document.getElementById('info-elevation').textContent = Math.round(elev) + '°';
+  document.getElementById('info-back').textContent = Math.round(sh.backPct * elevFactor) + '%';
+  document.getElementById('info-mid').textContent = Math.round(sh.midPct * elevFactor) + '%';
+  document.getElementById('info-front').textContent = Math.round(sh.frontPct * elevFactor) + '%';
+  document.getElementById('info-hours').textContent = sh.back.split('–')[0] + '–' + sh.back.split(' ')[1];
+}
+
+function getSunCanvasPos(hourDecimal, declinationDeg, canvas_w, canvas_h, groundY) {
+  const decl = SEASON_DECL[declinationDeg];
+  const sunrise = SEASON_SUNRISE[declinationDeg];
+  const sunset = SEASON_SUNSET[declinationDeg];
+  const elev = solarElevation(hourDecimal, decl);
+  const az = sunAzimuth(hourDecimal, decl);
+  // Map azimuth 50-310 to canvas x
+  const azNorm = (az - 50) / (310 - 50);
+  const x = 40 + azNorm * (canvas_w - 80);
+  // Map elevation to canvas y: 0° = groundY, 90° = top (60px from top)
+  const y = groundY - (elev / 90) * (groundY - 60);
+  return { x, y, elev, az };
+}
+
+function skyColor(time, elevDeg) {
+  // Returns [top color, bottom color] for gradient
+  if (elevDeg < -6) return ['#020408', '#050810'];
+  if (elevDeg < 0) {
+    // Twilight
+    const t = (elevDeg + 6) / 6;
+    return [lerpColor('#020408','#1a3a6e',t), lerpColor('#050810','#3a2a4a',t)];
+  }
+  if (time < 7) {
+    const t = Math.min(1,(time-5)/2);
+    return [lerpColor('#1a3a6e','#5b8cc8',t), lerpColor('#e05020','#f5a060',t)];
+  }
+  if (time < 9) {
+    const t = (time-7)/2;
+    return [lerpColor('#5b8cc8','#3a7abf',t), lerpColor('#f5a060','#9bbfe0',t)];
+  }
+  if (time < 17) {
+    // Midday — deep blue sky
+    const noon = 1 - Math.abs(time-13)/4;
+    return [lerpColor('#2a5a9a','#1a4a8a',noon), lerpColor('#5a90c8','#4a80b8',noon)];
+  }
+  if (time < 19) {
+    const t = (time-17)/2;
+    return [lerpColor('#1a4a8a','#5b6aae',t), lerpColor('#4a80b8','#e0804a',t)];
+  }
+  if (time < 21) {
+    const t = (time-19)/2;
+    return [lerpColor('#5b6aae','#1a2560',t), lerpColor('#e0804a','#6a4090',t)];
+  }
+  return ['#020408','#050810'];
+}
+
+function lerpColor(a, b, t) {
+  const ah = parseInt(a.slice(1),16), bh = parseInt(b.slice(1),16);
+  const ar=(ah>>16)&255, ag=(ah>>8)&255, ab=ah&255;
+  const br=(bh>>16)&255, bg=(bh>>8)&255, bb=bh&255;
+  const rr=Math.round(ar+(br-ar)*t), rg=Math.round(ag+(bg-ag)*t), rb=Math.round(ab+(bb-ab)*t);
+  return '#'+[rr,rg,rb].map(v=>v.toString(16).padStart(2,'0')).join('');
+}
+
+function drawConifer(ctx, x, y, height, color1, color2) {
+  const w = height * 0.45;
+  // Three tiers
+  for (let i = 0; i < 3; i++) {
+    const ty = y - height * (0.3 + i * 0.28);
+    const tw = w * (1 - i * 0.2);
+    const th = height * 0.35;
+    ctx.beginPath();
+    ctx.moveTo(x, ty - th);
+    ctx.lineTo(x - tw, ty);
+    ctx.lineTo(x + tw, ty);
+    ctx.closePath();
+    const g = ctx.createLinearGradient(x - tw, ty - th, x + tw, ty);
+    g.addColorStop(0, color2);
+    g.addColorStop(1, color1);
+    ctx.fillStyle = g;
+    ctx.fill();
+  }
+  // Trunk
+  ctx.fillStyle = '#5a3a1a';
+  ctx.fillRect(x - 4, y - height * 0.08, 8, height * 0.1);
+}
+
+function drawRaisedBed(ctx, x, y, w, h, zones, elevFactor) {
+  // Zone backgrounds
+  const zoneH = h / 3;
+  // Full sun (top 50%) — yellow tint
+  const fs = ctx.createLinearGradient(x, y, x, y+h*0.5);
+  fs.addColorStop(0, `rgba(255,220,50,${0.18 * elevFactor})`);
+  fs.addColorStop(1, `rgba(255,220,50,${0.08 * elevFactor})`);
+  ctx.fillStyle = fs;
+  ctx.fillRect(x, y, w, h*0.5);
+  // Part sun (middle 30%)
+  ctx.fillStyle = `rgba(100,200,100,${0.15 * elevFactor})`;
+  ctx.fillRect(x, y+h*0.5, w, h*0.3);
+  // Shade (bottom 20%)
+  ctx.fillStyle = `rgba(80,120,200,${0.18*(1-elevFactor*0.5)})`;
+  ctx.fillRect(x, y+h*0.8, w, h*0.2);
+  // Border
+  ctx.strokeStyle = '#5a4a2a';
+  ctx.lineWidth = 2.5;
+  ctx.strokeRect(x, y, w, h);
+  // Soil texture
+  ctx.fillStyle = 'rgba(90,60,30,.25)';
+  for (let i = 0; i < 3; i++) {
+    ctx.fillRect(x+4+i*(w/3-2), y+3, w/3-4, h-6);
+  }
+  // Zone dividers
+  ctx.strokeStyle = 'rgba(255,255,255,.15)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.moveTo(x, y+h*0.5); ctx.lineTo(x+w, y+h*0.5); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x, y+h*0.8); ctx.lineTo(x+w, y+h*0.8); ctx.stroke();
+  ctx.setLineDash([]);
+  // Labels
+  ctx.font = '10px DM Sans, sans-serif';
+  ctx.fillStyle = 'rgba(255,220,50,.7)';
+  ctx.fillText('Full Sun', x+5, y+12);
+  ctx.fillStyle = 'rgba(120,220,120,.7)';
+  ctx.fillText('Part Sun', x+5, y+h*0.5+12);
+  ctx.fillStyle = 'rgba(120,160,220,.7)';
+  ctx.fillText('Shade', x+5, y+h*0.82+10);
+}
+
+function drawFence(ctx, y, x1, x2) {
+  const postSpacing = 40;
+  ctx.strokeStyle = '#6a5a3a';
+  ctx.lineWidth = 3;
+  // Rails
+  ctx.beginPath(); ctx.moveTo(x1, y-20); ctx.lineTo(x2, y-20); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x1, y-8);  ctx.lineTo(x2, y-8);  ctx.stroke();
+  // Posts
+  for (let px = x1; px <= x2; px += postSpacing) {
+    ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.moveTo(px, y-30); ctx.lineTo(px, y+2); ctx.stroke();
+  }
+}
+
+function drawStump(ctx, x, y, r) {
+  ctx.fillStyle = '#5a3a1a';
+  ctx.beginPath();
+  ctx.ellipse(x, y, r, r*0.4, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.strokeStyle = '#7a5a2a';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  // Rings
+  ctx.strokeStyle = 'rgba(180,140,80,.3)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.ellipse(x, y, r*0.7, r*0.28, 0, 0, Math.PI*2); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(x, y, r*0.4, r*0.16, 0, 0, Math.PI*2); ctx.stroke();
+}
+
+function drawOverhangBranch(ctx, x1, y1) {
+  ctx.strokeStyle = '#4a3a1a';
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.bezierCurveTo(x1+80, y1+30, x1+140, y1+10, x1+200, y1+50);
+  ctx.stroke();
+  // Leaves
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = '#2a5a2a';
+  for (let i = 0; i < 6; i++) {
+    const t = i / 5;
+    const bx = bezierPoint(x1, x1+80, x1+140, x1+200, t);
+    const by = bezierPoint(y1, y1+30, y1+10, y1+50, t);
+    ctx.beginPath();
+    ctx.moveTo(bx, by);
+    ctx.lineTo(bx + 15*(Math.random()-.5), by + 20 + 10*Math.random());
+    ctx.stroke();
+  }
+}
+
+function bezierPoint(p0, p1, p2, p3, t) {
+  return Math.pow(1-t,3)*p0 + 3*Math.pow(1-t,2)*t*p1 + 3*(1-t)*t*t*p2 + Math.pow(t,3)*p3;
+}
+
+function drawSunScene() {
+  const canvas = document.getElementById('sun-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = CANVAS_W, H = CANVAS_H;
+  const time = sunState.time;
+  const season = sunState.season;
+  const decl = SEASON_DECL[season];
+  const elev = solarElevation(time, decl);
+  const elevFactor = Math.max(0, Math.min(1, elev / 60));
+  const isNight = elev < -3;
+
+  // 1. SKY GRADIENT
+  const [skyTop, skyBot] = skyColor(time, elev);
+  const skyGrad = ctx.createLinearGradient(0,0,0,GROUND_Y);
+  skyGrad.addColorStop(0, skyTop);
+  skyGrad.addColorStop(1, skyBot);
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, W, GROUND_Y);
+
+  // Stars at night
+  if (elev < 6) {
+    const starAlpha = Math.max(0, Math.min(1, (-elev+6)/10));
+    ctx.fillStyle = `rgba(255,255,255,${starAlpha*0.7})`;
+    const stars = [[50,40],[120,25],[200,55],[300,20],[400,35],[520,15],[600,45],[700,30],[780,55],[820,20],[150,80],[380,75],[650,70],[750,85]];
+    stars.forEach(([sx,sy]) => {
+      ctx.beginPath(); ctx.arc(sx,sy,1.2,0,Math.PI*2); ctx.fill();
+    });
+  }
+
+  // 2. GROUND
+  const groundGrad = ctx.createLinearGradient(0, GROUND_Y, 0, H);
+  groundGrad.addColorStop(0, '#2a3a1a');
+  groundGrad.addColorStop(0.3, '#1e2c12');
+  groundGrad.addColorStop(1, '#141e0c');
+  ctx.fillStyle = groundGrad;
+  ctx.fillRect(0, GROUND_Y, W, H - GROUND_Y);
+
+  // Path / walkway
+  ctx.fillStyle = 'rgba(150,130,90,.2)';
+  ctx.beginPath();
+  ctx.moveTo(340, GROUND_Y);
+  ctx.lineTo(390, H);
+  ctx.lineTo(470, H);
+  ctx.lineTo(520, GROUND_Y);
+  ctx.closePath();
+  ctx.fill();
+
+  // 3. BACKGROUND CONIFERS (North/Back — taller, darker)
+  drawConifer(ctx, 60,  GROUND_Y+5, 180, '#1a3a1a', '#0d2810');
+  drawConifer(ctx, 120, GROUND_Y+5, 200, '#1a3a1a', '#0d2810');
+  drawConifer(ctx, 170, GROUND_Y+5, 160, '#1a3a1a', '#0d2810');
+  drawConifer(ctx, 700, GROUND_Y+5, 170, '#1a3a1a', '#0d2810');
+  drawConifer(ctx, 760, GROUND_Y+5, 190, '#1a3a1a', '#0d2810');
+  drawConifer(ctx, 820, GROUND_Y+5, 155, '#1a3a1a', '#0d2810');
+
+  // West conifers (left side, slightly different shade)
+  drawConifer(ctx, 25,  GROUND_Y+5, 140, '#1a4020', '#0d2a14');
+
+  // 4. SUN PATH ARC (dashed)
+  const sunrise = SEASON_SUNRISE[season];
+  const sunset = SEASON_SUNSET[season];
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255,220,80,.3)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6,8]);
+  ctx.beginPath();
+  let firstPt = true;
+  for (let t = sunrise; t <= sunset; t += 0.2) {
+    const pos = getSunCanvasPos(t, season, W, H, GROUND_Y);
+    if (pos.elev <= 0) continue;
+    if (firstPt) { ctx.moveTo(pos.x, pos.y); firstPt=false; }
+    else ctx.lineTo(pos.x, pos.y);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+
+  // 5. SUN OR MOON
+  const sunPos = getSunCanvasPos(time, season, W, H, GROUND_Y);
+  if (!isNight && elev > 0) {
+    // Sun glow
+    const glowR = 45 + elevFactor * 20;
+    const glow = ctx.createRadialGradient(sunPos.x, sunPos.y, 0, sunPos.x, sunPos.y, glowR);
+    const glowAlpha = 0.15 + elevFactor * 0.2;
+    glow.addColorStop(0, `rgba(255,240,100,${glowAlpha*2})`);
+    glow.addColorStop(0.4, `rgba(255,200,50,${glowAlpha})`);
+    glow.addColorStop(1, 'rgba(255,180,0,0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(sunPos.x, sunPos.y, glowR, 0, Math.PI*2);
+    ctx.fill();
+    // Sun disk
+    const sunR = 16 + elevFactor * 4;
+    const sunColor = elevFactor > 0.3 ? '#fff5a0' : '#ffb040';
+    ctx.fillStyle = sunColor;
+    ctx.beginPath();
+    ctx.arc(sunPos.x, sunPos.y, sunR, 0, Math.PI*2);
+    ctx.fill();
+    // Bright center
+    ctx.fillStyle = 'rgba(255,255,255,.7)';
+    ctx.beginPath();
+    ctx.arc(sunPos.x, sunPos.y, sunR*0.4, 0, Math.PI*2);
+    ctx.fill();
+  } else if (elev < 0) {
+    // Moon
+    const moonY = 60 + (1 - (time-19)/12) * 120;
+    const moonX = time < 12 ? 100 : 750;
+    // Moon body
+    ctx.fillStyle = '#d8dce8';
+    ctx.beginPath();
+    ctx.arc(moonX, moonY, 18, 0, Math.PI*2);
+    ctx.fill();
+    // Crescent shadow
+    ctx.fillStyle = '#020408';
+    ctx.beginPath();
+    ctx.arc(moonX+8, moonY, 16, 0, Math.PI*2);
+    ctx.fill();
+    // Craters
+    ctx.fillStyle = 'rgba(180,185,200,.5)';
+    ctx.beginPath(); ctx.arc(moonX-6, moonY+4, 3, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(moonX-2, moonY-6, 2, 0, Math.PI*2); ctx.fill();
+  }
+
+  // 6. RAISED BEDS
+  const bedTop = GROUND_Y - 120;
+  const bedH = 100;
+  const bedAx = 220, bedBx = 490;
+  const bedW = 230;
+
+  // Shadow simulation: sun from left/right creates shadow on south side of beds
+  // Taller conifers to north cast shadow — represented by darker north edges
+  if (elev > 0) {
+    const az = sunAzimuth(time, decl);
+    // Shadow overlay on beds based on azimuth
+    const shadowAlpha = Math.max(0, 0.4 - elevFactor * 0.35);
+    // If sun is low in east/west, front of beds more shadowed
+    ctx.fillStyle = `rgba(0,0,0,${shadowAlpha})`;
+    // Front shadow strip
+    ctx.fillRect(bedAx, bedTop + bedH*0.75, bedW, bedH*0.25);
+    ctx.fillRect(bedBx, bedTop + bedH*0.75, bedW, bedH*0.25);
+    // If sun behind conifers (north), shade back too
+    if (elev < 20 && (time < 8 || time > 16)) {
+      ctx.fillStyle = `rgba(0,0,0,${shadowAlpha*0.5})`;
+      ctx.fillRect(bedAx, bedTop, bedW, bedH*0.35);
+      ctx.fillRect(bedBx, bedTop, bedW, bedH*0.35);
+    }
+  }
+
+  drawRaisedBed(ctx, bedAx, bedTop, bedW, bedH, 'all', elevFactor);
+  drawRaisedBed(ctx, bedBx, bedTop, bedW, bedH, 'all', elevFactor);
+
+  // Bed labels
+  ctx.font = 'bold 12px DM Sans, sans-serif';
+  ctx.fillStyle = 'rgba(245,217,138,.8)';
+  ctx.fillText('Bed A', bedAx + bedW/2 - 15, bedTop - 6);
+  ctx.fillText('Bed B', bedBx + bedW/2 - 15, bedTop - 6);
+
+  // 7. FENCE (south/front of beds)
+  drawFence(ctx, GROUND_Y - 8, bedAx - 20, bedBx + bedW + 20);
+
+  // 8. STUMPS
+  drawStump(ctx, 400, GROUND_Y+10, 22);
+  drawStump(ctx, 460, GROUND_Y+18, 16);
+
+  // 9. OVERHANGING BRANCH (from west conifers)
+  drawOverhangBranch(ctx, 30, GROUND_Y - 60);
+
+  // 10. GROUND DETAILS — grass blades near beds
+  ctx.strokeStyle = '#2a5a1a';
+  ctx.lineWidth = 1.5;
+  for (let gx = bedAx - 15; gx < bedBx + bedW + 15; gx += 6) {
+    const gh = 6 + Math.random() * 8;
+    ctx.beginPath();
+    ctx.moveTo(gx, GROUND_Y);
+    ctx.lineTo(gx + (Math.random()-0.5)*4, GROUND_Y - gh);
+    ctx.stroke();
+  }
+
+  // 11. TIME LABEL (top right)
+  const hrs = Math.floor(time);
+  const mins = Math.round((time - hrs) * 60);
+  const ampm = hrs < 12 ? 'AM' : 'PM';
+  const h12 = hrs === 0 ? 12 : hrs > 12 ? hrs-12 : hrs;
+  const timeStr = h12 + ':' + String(mins).padStart(2,'0') + ' ' + ampm;
+  ctx.font = 'bold 16px DM Sans, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,.75)';
+  ctx.fillText(timeStr, W - 90, 28);
+
+  // Season label
+  ctx.font = '13px DM Sans, sans-serif';
+  ctx.fillStyle = 'rgba(245,217,138,.7)';
+  ctx.fillText(season.charAt(0).toUpperCase() + season.slice(1), W - 80, 48);
+
+  // 12. N/S LABELS
+  ctx.font = 'bold 13px DM Sans, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,.5)';
+  ctx.fillText('N', 12, GROUND_Y - 80);
+  ctx.fillText('S', 12, GROUND_Y + 15);
+  ctx.fillText('W', 14, GROUND_Y - 160);
+  ctx.fillText('E', W - 22, GROUND_Y - 160);
+
+  // Compass arrow
+  ctx.strokeStyle = 'rgba(255,255,255,.3)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(30, GROUND_Y-155); ctx.lineTo(30, GROUND_Y-180); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(30, GROUND_Y-180); ctx.lineTo(25, GROUND_Y-170); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(30, GROUND_Y-180); ctx.lineTo(35, GROUND_Y-170); ctx.stroke();
+
+  // 13. Ambient light overlay on ground
+  if (elev > 0) {
+    const ambGrad = ctx.createLinearGradient(0, GROUND_Y, 0, H);
+    ambGrad.addColorStop(0, `rgba(255,240,150,${elevFactor*0.06})`);
+    ambGrad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = ambGrad;
+    ctx.fillRect(0, GROUND_Y, W, H - GROUND_Y);
+  }
+}
+
+// =====================================================
+// CROP LIBRARY — COMPLETE
+// =====================================================
+const CROP_LIBRARY = [
+  { id:"tomato-bradley", name:"Tomato", variety:"Bradley", category:"tomato", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:8, directSowDate:null, daysToMaturity:75, harvestWindow:"July-October", companions:["basil","marigold","parsley","carrot","chives"], avoid:["fennel","brassica","potato"], notes:"Determinate pink heirloom. Great for slicing.", isVertical:true, trellisType:"stake", heightFt:4, successionInterval:0, yieldPerPlant:"10-15 lbs", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"tomato-yellowpear", name:"Tomato", variety:"Yellow Pear", category:"tomato", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:8, directSowDate:null, daysToMaturity:78, harvestWindow:"July-October", companions:["basil","marigold","parsley","carrot"], avoid:["fennel","brassica","potato"], notes:"Indeterminate cherry. Very prolific. Great for market.", isVertical:true, trellisType:"stake", heightFt:6, successionInterval:0, yieldPerPlant:"15-20 lbs", isMarketCrop:true, feedingCategory:"heavy", inInventory:true },
+  { id:"tomato-redpear", name:"Tomato", variety:"Red Pear", category:"tomato", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:8, directSowDate:null, daysToMaturity:78, harvestWindow:"July-October", companions:["basil","marigold","parsley","carrot"], avoid:["fennel","brassica","potato"], notes:"Indeterminate cherry pear type.", isVertical:true, trellisType:"stake", heightFt:6, successionInterval:0, yieldPerPlant:"15-20 lbs", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"tomato-manitoba", name:"Tomato", variety:"Manitoba", category:"tomato", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:8, directSowDate:null, daysToMaturity:60, harvestWindow:"July-September", companions:["basil","marigold","parsley","carrot"], avoid:["fennel","brassica","potato"], notes:"Determinate short-season variety. Excellent for early harvest.", isVertical:false, trellisType:"cage", heightFt:3, successionInterval:0, yieldPerPlant:"10-12 lbs", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"pepper-california-wonder", name:"Pepper", variety:"California Wonder", category:"pepper", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:10, directSowDate:null, daysToMaturity:75, harvestWindow:"July-October", companions:["basil","marigold","carrot","tomato"], avoid:["fennel","brassica"], notes:"Classic sweet bell pepper. Very productive in Zone 8b.", isVertical:false, trellisType:null, heightFt:2, successionInterval:0, yieldPerPlant:"20-30 fruits", isMarketCrop:true, feedingCategory:"heavy", inInventory:true },
+  { id:"pepper-hot-cayenne", name:"Hot Pepper", variety:"Cayenne Long Red", category:"pepper", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:10, directSowDate:null, daysToMaturity:70, harvestWindow:"July-October", companions:["basil","marigold","carrot"], avoid:["fennel","brassica"], notes:"Prolific hot pepper. Great dried or fresh.", isVertical:false, trellisType:null, heightFt:2.5, successionInterval:0, yieldPerPlant:"50+ fruits", isMarketCrop:true, feedingCategory:"heavy", inInventory:true },
+  { id:"cucumber-marketmore", name:"Cucumber", variety:"Marketmore 76", category:"cucumber", sfgCount:1, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:2, directSowDate:"May 1", daysToMaturity:65, harvestWindow:"July-September", companions:["dill","nasturtium","marigold","bean"], avoid:["sage","potato"], notes:"Classic slicing cucumber. Very productive. Needs trellis.", isVertical:true, trellisType:"vertical", heightFt:5, successionInterval:3, yieldPerPlant:"10-20 fruits", isMarketCrop:true, feedingCategory:"heavy", inInventory:true },
+  { id:"zucchini-black-beauty", name:"Zucchini", variety:"Black Beauty", category:"squash", sfgCount:4, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:1, directSowDate:"May 1", daysToMaturity:50, harvestWindow:"June-October", companions:["nasturtium","marigold","bean","corn"], avoid:["potato"], notes:"Prolific summer squash. Harvest small for best flavor.", isVertical:false, trellisType:null, heightFt:3, successionInterval:4, yieldPerPlant:"6-10 lbs", isMarketCrop:true, feedingCategory:"heavy", inInventory:true },
+  { id:"bean-provider", name:"Bush Bean", variety:"Provider", category:"bean", sfgCount:9, sunReq:"full", startMethod:"direct", weeksBeforeLastFrost:0, directSowDate:"May 1", daysToMaturity:50, harvestWindow:"July-September", companions:["carrot","cucumber","beet","nasturtium"], avoid:["onion","garlic","fennel"], notes:"Heavy bearing bush bean. Start direct sow after frost.", isVertical:false, trellisType:null, heightFt:1.5, successionInterval:3, yieldPerPlant:"0.5 lb", isMarketCrop:false, feedingCategory:"fixer", inInventory:true },
+  { id:"bean-blue-lake", name:"Bush Bean", variety:"Blue Lake 274", category:"bean", sfgCount:9, sunReq:"full", startMethod:"direct", weeksBeforeLastFrost:0, directSowDate:"May 1", daysToMaturity:55, harvestWindow:"July-September", companions:["carrot","cucumber","beet","nasturtium"], avoid:["onion","garlic","fennel"], notes:"Classic snap bean. Excellent flavor, very productive.", isVertical:false, trellisType:null, heightFt:1.5, successionInterval:3, yieldPerPlant:"0.5 lb", isMarketCrop:true, feedingCategory:"fixer", inInventory:true },
+  { id:"pea-sugar-snap", name:"Pea", variety:"Sugar Snap", category:"pea", sfgCount:8, sunReq:"full", startMethod:"direct", weeksBeforeLastFrost:6, directSowDate:"March 1", daysToMaturity:62, harvestWindow:"May-June", companions:["carrot","radish","lettuce","spinach"], avoid:["onion","garlic","leek"], notes:"Sweet snap pea. Direct sow as soon as soil workable.", isVertical:true, trellisType:"vertical", heightFt:5, successionInterval:0, yieldPerPlant:"0.25 lb", isMarketCrop:false, feedingCategory:"fixer", inInventory:true },
+  { id:"kale-lacinato", name:"Kale", variety:"Lacinato (Dino)", category:"brassica", sfgCount:1, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:6, directSowDate:"March 15", daysToMaturity:65, harvestWindow:"June-November", companions:["celery","dill","potato","herb"], avoid:["tomato","strawberry","grape"], notes:"Excellent cut-and-come-again. Very hardy, overwinters well.", isVertical:false, trellisType:null, heightFt:2.5, successionInterval:0, yieldPerPlant:"2 lbs/month", isMarketCrop:true, feedingCategory:"heavy", inInventory:true },
+  { id:"kale-red-russian", name:"Kale", variety:"Red Russian", category:"brassica", sfgCount:1, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:6, directSowDate:"March 15", daysToMaturity:60, harvestWindow:"May-November", companions:["celery","dill","herb"], avoid:["tomato","strawberry"], notes:"Tender, frilly leaves. Earlier and milder than Lacinato.", isVertical:false, trellisType:null, heightFt:2, successionInterval:0, yieldPerPlant:"2 lbs/month", isMarketCrop:true, feedingCategory:"heavy", inInventory:true },
+  { id:"chard-rainbow", name:"Chard", variety:"Rainbow Mix", category:"brassica", sfgCount:4, sunReq:"part", startMethod:"either", weeksBeforeLastFrost:4, directSowDate:"March 15", daysToMaturity:55, harvestWindow:"May-November", companions:["tomato","herb","bean","carrot"], avoid:["corn"], notes:"Colorful stalks. Cut-and-come-again. Very productive.", isVertical:false, trellisType:null, heightFt:1.5, successionInterval:0, yieldPerPlant:"1.5 lbs/month", isMarketCrop:true, feedingCategory:"light", inInventory:true },
+  { id:"lettuce-buttercrunch", name:"Lettuce", variety:"Buttercrunch", category:"lettuce", sfgCount:4, sunReq:"part", startMethod:"either", weeksBeforeLastFrost:4, directSowDate:"March 1", daysToMaturity:55, harvestWindow:"May-July, Sep-Nov", companions:["carrot","radish","strawberry","chive"], avoid:["celery","parsley"], notes:"Heading lettuce. Bolt-resistant. Good for successive plantings.", isVertical:false, trellisType:null, heightFt:0.5, successionInterval:3, yieldPerPlant:"0.5 lb/head", isMarketCrop:false, feedingCategory:"light", inInventory:true },
+  { id:"lettuce-red-sails", name:"Lettuce", variety:"Red Sails", category:"lettuce", sfgCount:4, sunReq:"part", startMethod:"either", weeksBeforeLastFrost:4, directSowDate:"March 1", daysToMaturity:45, harvestWindow:"May-July, Sep-Nov", companions:["carrot","radish","chive","strawberry"], avoid:["celery","parsley"], notes:"Loose-leaf red variety. Fast-growing, beautiful.", isVertical:false, trellisType:null, heightFt:0.5, successionInterval:3, yieldPerPlant:"0.5 lb", isMarketCrop:true, feedingCategory:"light", inInventory:true },
+  { id:"spinach-bloomsdale", name:"Spinach", variety:"Bloomsdale", category:"greens", sfgCount:9, sunReq:"part", startMethod:"direct", weeksBeforeLastFrost:6, directSowDate:"March 1", daysToMaturity:48, harvestWindow:"May-June, Sep-Oct", companions:["pea","bean","carrot","strawberry"], avoid:["none"], notes:"Savoy type, good texture. Cold tolerant. Bolts in heat.", isVertical:false, trellisType:null, heightFt:0.5, successionInterval:3, yieldPerPlant:"0.25 lb", isMarketCrop:false, feedingCategory:"light", inInventory:true },
+  { id:"arugula-wild", name:"Arugula", variety:"Wild (Sylvetta)", category:"greens", sfgCount:9, sunReq:"shade", startMethod:"direct", weeksBeforeLastFrost:4, directSowDate:"March 1", daysToMaturity:40, harvestWindow:"Apr-Jun, Aug-Oct", companions:["lettuce","spinach","carrot"], avoid:["none"], notes:"Peppery wild arugula. Slower to bolt than standard. Shade tolerant.", isVertical:false, trellisType:null, heightFt:0.5, successionInterval:3, yieldPerPlant:"0.25 lb", isMarketCrop:false, feedingCategory:"light", inInventory:true },
+  { id:"radish-french-breakfast", name:"Radish", variety:"French Breakfast", category:"root", sfgCount:16, sunReq:"part", startMethod:"direct", weeksBeforeLastFrost:4, directSowDate:"March 1", daysToMaturity:23, harvestWindow:"April-October", companions:["carrot","cucumber","lettuce","pea"], avoid:["hyssop"], notes:"Fast crop for succession planting. Great row filler.", isVertical:false, trellisType:null, heightFt:0.5, successionInterval:2, yieldPerPlant:"0.1 lb", isMarketCrop:false, feedingCategory:"light", inInventory:true },
+  { id:"carrot-nantes", name:"Carrot", variety:"Nantes Coreless", category:"root", sfgCount:16, sunReq:"full", startMethod:"direct", weeksBeforeLastFrost:2, directSowDate:"March 15", daysToMaturity:70, harvestWindow:"June-October", companions:["lettuce","rosemary","sage","chive","tomato"], avoid:["dill","fennel"], notes:"Sweet, cylindrical. Needs deep loose soil.", isVertical:false, trellisType:null, heightFt:0.5, successionInterval:4, yieldPerPlant:"0.1 lb", isMarketCrop:false, feedingCategory:"light", inInventory:true },
+  { id:"beet-detroit", name:"Beet", variety:"Detroit Dark Red", category:"root", sfgCount:9, sunReq:"full", startMethod:"direct", weeksBeforeLastFrost:4, directSowDate:"March 15", daysToMaturity:60, harvestWindow:"June-October", companions:["lettuce","onion","herb","brassica"], avoid:["pole bean","field mustard"], notes:"Classic dark red beet. Both root and greens edible.", isVertical:false, trellisType:null, heightFt:0.5, successionInterval:4, yieldPerPlant:"0.25 lb", isMarketCrop:false, feedingCategory:"light", inInventory:true },
+  { id:"onion-walla-walla", name:"Onion", variety:"Walla Walla Sweet", category:"allium", sfgCount:4, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:12, directSowDate:null, daysToMaturity:125, harvestWindow:"July-August", companions:["carrot","lettuce","beet","chamomile"], avoid:["pea","bean","asparagus"], notes:"Famous Pacific NW sweet onion. Start Jan 15 for spring transplant.", isVertical:false, trellisType:null, heightFt:1.5, successionInterval:0, yieldPerPlant:"0.5 lb", isMarketCrop:true, feedingCategory:"light", inInventory:true },
+  { id:"leek-giant-musselburgh", name:"Leek", variety:"Giant Musselburgh", category:"allium", sfgCount:9, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:12, directSowDate:null, daysToMaturity:120, harvestWindow:"Sep-November", companions:["carrot","celery","onion"], avoid:["pea","bean"], notes:"Large winter leek. Excellent flavor after frost.", isVertical:false, trellisType:null, heightFt:1.5, successionInterval:0, yieldPerPlant:"0.3 lb", isMarketCrop:false, feedingCategory:"light", inInventory:true },
+  { id:"garlic-hardneck", name:"Garlic", variety:"Music (Hardneck)", category:"allium", sfgCount:9, sunReq:"full", startMethod:"direct", weeksBeforeLastFrost:-20, directSowDate:"October 15", daysToMaturity:240, harvestWindow:"July", companions:["tomato","pepper","carrot","beet"], avoid:["pea","bean","asparagus"], notes:"Plant fall, harvest summer. Music is outstanding porcelain hardneck.", isVertical:false, trellisType:null, heightFt:1.5, successionInterval:0, yieldPerPlant:"0.25 lb", isMarketCrop:true, feedingCategory:"light", inInventory:true },
+  { id:"broccoli-di-cicco", name:"Broccoli", variety:"Di Cicco", category:"brassica", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:8, directSowDate:null, daysToMaturity:65, harvestWindow:"June-July, Sep-Oct", companions:["dill","celery","herb","potato"], avoid:["tomato","strawberry","pepper"], notes:"Sprouting type with continuous side shoots. Start Feb for spring.", isVertical:false, trellisType:null, heightFt:2, successionInterval:0, yieldPerPlant:"1-2 lbs", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"cabbage-red-acre", name:"Cabbage", variety:"Red Acre", category:"brassica", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:6, directSowDate:null, daysToMaturity:75, harvestWindow:"July-September", companions:["dill","celery","herb"], avoid:["tomato","strawberry","grape"], notes:"Small, tight heads. Good storage cabbage.", isVertical:false, trellisType:null, heightFt:1.5, successionInterval:0, yieldPerPlant:"2-3 lbs", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"basil-genovese", name:"Basil", variety:"Genovese", category:"herb", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:4, directSowDate:null, daysToMaturity:60, harvestWindow:"June-September", companions:["tomato","pepper","marigold"], avoid:["sage","rue"], notes:"Classic Italian basil. Pinch flowers for bushy growth.", isVertical:false, trellisType:null, heightFt:1.5, successionInterval:4, yieldPerPlant:"0.5 lb", isMarketCrop:true, feedingCategory:"light", inInventory:true },
+  { id:"parsley-flat-leaf", name:"Parsley", variety:"Italian Flat Leaf", category:"herb", sfgCount:1, sunReq:"part", startMethod:"greenhouse", weeksBeforeLastFrost:8, directSowDate:null, daysToMaturity:75, harvestWindow:"June-October", companions:["tomato","carrot","asparagus"], avoid:["none"], notes:"Biennial. Slow to germinate. Start early indoors.", isVertical:false, trellisType:null, heightFt:1, successionInterval:0, yieldPerPlant:"0.25 lb", isMarketCrop:false, feedingCategory:"light", inInventory:true },
+  { id:"dill-fernleaf", name:"Dill", variety:"Fernleaf", category:"herb", sfgCount:1, sunReq:"full", startMethod:"direct", weeksBeforeLastFrost:0, directSowDate:"May 1", daysToMaturity:40, harvestWindow:"June-August", companions:["cabbage","cucumber","onion","lettuce"], avoid:["carrot","tomato-mature","fennel"], notes:"Compact dill. Keep away from mature tomatoes and carrots.", isVertical:false, trellisType:null, heightFt:2, successionInterval:4, yieldPerPlant:"bunch", isMarketCrop:false, feedingCategory:"light", inInventory:true },
+  { id:"cilantro-slow-bolt", name:"Cilantro", variety:"Slow Bolt", category:"herb", sfgCount:4, sunReq:"part", startMethod:"direct", weeksBeforeLastFrost:4, directSowDate:"March 15", daysToMaturity:50, harvestWindow:"May-June, Sep-Oct", companions:["spinach","lettuce","tomato"], avoid:["none"], notes:"Bolt resistant. Direct sow every 3 weeks for continuous harvest.", isVertical:false, trellisType:null, heightFt:1, successionInterval:3, yieldPerPlant:"bunch", isMarketCrop:false, feedingCategory:"light", inInventory:true },
+  { id:"chives-common", name:"Chives", variety:"Common", category:"herb", sfgCount:16, sunReq:"part", startMethod:"either", weeksBeforeLastFrost:6, directSowDate:"March 1", daysToMaturity:80, harvestWindow:"April-October", companions:["carrot","tomato","apple","rose"], avoid:["pea","bean"], notes:"Perennial. Edible flowers attractive to pollinators.", isVertical:false, trellisType:null, heightFt:1, successionInterval:0, yieldPerPlant:"bunch/year", isMarketCrop:false, feedingCategory:"light", inInventory:true },
+  { id:"marigold-french", name:"Marigold", variety:"French Dwarf", category:"flower", sfgCount:4, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:2, directSowDate:"May 1", daysToMaturity:45, harvestWindow:"June-October", companions:["tomato","pepper","squash","bean","brassica"], avoid:["none"], notes:"Pest deterrent. Plant at bed borders. Edible flowers.", isVertical:false, trellisType:null, heightFt:1, successionInterval:0, yieldPerPlant:"N/A", isMarketCrop:false, feedingCategory:"neutral", inInventory:true },
+  { id:"sunflower-mammoth", name:"Sunflower", variety:"Mammoth", category:"flower", sfgCount:1, sunReq:"full", startMethod:"direct", weeksBeforeLastFrost:0, directSowDate:"May 1", daysToMaturity:90, harvestWindow:"August-September", companions:["cucumber","squash"], avoid:["potato"], notes:"Tall. Plant at row 1 (north/back). Attracts pollinators. Edible seeds.", isVertical:true, trellisType:null, heightFt:10, successionInterval:0, yieldPerPlant:"1 head", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"tomatillo-purple", name:"Tomatillo", variety:"Purple de Milpa", category:"tomatillo", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:6, directSowDate:null, daysToMaturity:75, harvestWindow:"July-October", companions:["basil","marigold","carrot"], avoid:["fennel","brassica"], notes:"Plant 2+ for pollination. Sprawling habit. Productive.", isVertical:false, trellisType:"cage", heightFt:4, successionInterval:0, yieldPerPlant:"5 lbs", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"eggplant-ichiban", name:"Eggplant", variety:"Ichiban", category:"eggplant", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:10, directSowDate:null, daysToMaturity:65, harvestWindow:"July-September", companions:["basil","marigold","pepper"], avoid:["fennel"], notes:"Japanese slender type. Start Feb. Needs heat.", isVertical:false, trellisType:null, heightFt:3, successionInterval:0, yieldPerPlant:"8-10 fruits", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"melon-hales-best", name:"Melon", variety:"Hale's Best Jumbo", category:"melon", sfgCount:2, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:2, directSowDate:"May 1", daysToMaturity:85, harvestWindow:"August-September", companions:["marigold","nasturtium","corn"], avoid:["potato"], notes:"Classic cantaloupe. Needs heat and full sun. 1-2 fruits/plant.", isVertical:false, trellisType:null, heightFt:1, successionInterval:0, yieldPerPlant:"1-2 fruits", isMarketCrop:false, feedingCategory:"heavy", inInventory:false },
+  { id:"watermelon-sugar-baby", name:"Watermelon", variety:"Sugar Baby", category:"melon", sfgCount:4, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:2, directSowDate:"May 1", daysToMaturity:80, harvestWindow:"August-September", companions:["marigold","nasturtium"], avoid:["potato"], notes:"Small icebox type. Zone 8b works well with warm summers.", isVertical:false, trellisType:null, heightFt:1, successionInterval:0, yieldPerPlant:"1-2 fruits", isMarketCrop:false, feedingCategory:"heavy", inInventory:false },
+  { id:"fennel-bronze", name:"Fennel", variety:"Bronze", category:"herb", sfgCount:1, sunReq:"full", startMethod:"direct", weeksBeforeLastFrost:0, directSowDate:"May 1", daysToMaturity:65, harvestWindow:"July-October", companions:["none"], avoid:["tomato","pepper","bean","pea","carrot","dill"], notes:"ISOLATE — inhibits most vegetables. Best in separate container.", isVertical:false, trellisType:null, heightFt:4, successionInterval:0, yieldPerPlant:"fronds+bulb", isMarketCrop:false, feedingCategory:"light", inInventory:false },
+  { id:"squash-delicata", name:"Winter Squash", variety:"Delicata", category:"squash", sfgCount:4, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:1, directSowDate:"May 1", daysToMaturity:100, harvestWindow:"September-October", companions:["corn","bean","nasturtium","marigold"], avoid:["potato"], notes:"Three Sisters companion. Sweet, nutty flesh. Good storage.", isVertical:false, trellisType:null, heightFt:2, successionInterval:0, yieldPerPlant:"3-5 fruits", isMarketCrop:true, feedingCategory:"heavy", inInventory:false },
+  { id:"corn-golden-bantam", name:"Corn", variety:"Golden Bantam", category:"corn", sfgCount:1, sunReq:"full", startMethod:"direct", weeksBeforeLastFrost:0, directSowDate:"May 1", daysToMaturity:78, harvestWindow:"August-September", companions:["bean","squash","melon"], avoid:["tomato"], notes:"Heirloom sweet corn. Plant in blocks of 4+ for pollination.", isVertical:true, trellisType:null, heightFt:6, successionInterval:0, yieldPerPlant:"2 ears", isMarketCrop:false, feedingCategory:"heavy", inInventory:false },
+  { id:"nasturtium-alaska", name:"Nasturtium", variety:"Alaska Variegated", category:"flower", sfgCount:1, sunReq:"part", startMethod:"direct", weeksBeforeLastFrost:0, directSowDate:"May 1", daysToMaturity:50, harvestWindow:"June-October", companions:["cucumber","squash","bean","tomato","brassica"], avoid:["none"], notes:"Edible flowers and leaves. Aphid trap crop. Great for bouquets.", isVertical:false, trellisType:null, heightFt:1, successionInterval:0, yieldPerPlant:"N/A", isMarketCrop:false, feedingCategory:"neutral", inInventory:true },
+  { id:"collards-champion", name:"Collards", variety:"Champion", category:"brassica", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:6, directSowDate:null, daysToMaturity:75, harvestWindow:"July-November", companions:["dill","celery","herb"], avoid:["tomato","strawberry"], notes:"Very cold hardy. Excellent for fall and winter harvest.", isVertical:false, trellisType:null, heightFt:2.5, successionInterval:0, yieldPerPlant:"2 lbs/month", isMarketCrop:false, feedingCategory:"heavy", inInventory:false },
+  { id:"pak-choi-joi-choi", name:"Pak Choi", variety:"Joi Choi", category:"brassica", sfgCount:4, sunReq:"part", startMethod:"greenhouse", weeksBeforeLastFrost:4, directSowDate:null, daysToMaturity:50, harvestWindow:"May-June, Sep-Oct", companions:["dill","celery"], avoid:["tomato","strawberry"], notes:"Fast growing. Excellent for fall succession. Start June 20 for fall.", isVertical:false, trellisType:null, heightFt:1.5, successionInterval:0, yieldPerPlant:"0.5 lb", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"turnip-purple-top", name:"Turnip", variety:"Purple Top White Globe", category:"root", sfgCount:9, sunReq:"part", startMethod:"direct", weeksBeforeLastFrost:4, directSowDate:"March 15", daysToMaturity:55, harvestWindow:"May-June, Sep-Oct", companions:["pea","bean","lettuce"], avoid:["none"], notes:"Spring and fall crop. Both roots and greens edible.", isVertical:false, trellisType:null, heightFt:0.5, successionInterval:0, yieldPerPlant:"0.3 lb", isMarketCrop:false, feedingCategory:"light", inInventory:false },
+  { id:"upland-cress", name:"Upland Cress", variety:"American", category:"greens", sfgCount:9, sunReq:"shade", startMethod:"direct", weeksBeforeLastFrost:4, directSowDate:"March 1", daysToMaturity:35, harvestWindow:"April-June, Sep-Oct", companions:["lettuce","spinach","radish"], avoid:["none"], notes:"Shade tolerant. Spicy watercress substitute. Very early crop.", isVertical:false, trellisType:null, heightFt:0.5, successionInterval:3, yieldPerPlant:"0.2 lb", isMarketCrop:false, feedingCategory:"light", inInventory:true },
+  { id:"morning-glory-heavenly-blue", name:"Morning Glory", variety:"Heavenly Blue", category:"flower", sfgCount:1, sunReq:"full", startMethod:"direct", weeksBeforeLastFrost:0, directSowDate:"May 1", daysToMaturity:90, harvestWindow:"July-October", companions:["corn","bean"], avoid:["none"], notes:"Vigorous climber. Plant at fence or trellis edge.", isVertical:true, trellisType:"vertical", heightFt:10, successionInterval:0, yieldPerPlant:"N/A", isMarketCrop:false, feedingCategory:"neutral", inInventory:false },
+  // ===== EXTRA TOMATOES (from spec) =====
+  { id:"tomato-roma", name:"Tomato", variety:"Roma", category:"tomato", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:8, directSowDate:null, daysToMaturity:75, harvestWindow:"August-October", companions:["basil","marigold","parsley","carrot"], avoid:["fennel","brassica","potato"], notes:"Determinate paste tomato. Excellent for sauce and canning.", isVertical:false, trellisType:"cage", heightFt:4, successionInterval:0, yieldPerPlant:"10-15 lbs", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"tomato-moneymaker", name:"Tomato", variety:"Money Maker", category:"tomato", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:8, directSowDate:null, daysToMaturity:75, harvestWindow:"July-October", companions:["basil","marigold","parsley","carrot"], avoid:["fennel","brassica","potato"], notes:"Indeterminate British heirloom. Medium red fruits, classic flavor.", isVertical:true, trellisType:"stake", heightFt:5, successionInterval:0, yieldPerPlant:"15-18 lbs", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"tomato-blackcherry", name:"Tomato", variety:"Black Cherry", category:"tomato", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:8, directSowDate:null, daysToMaturity:65, harvestWindow:"July-October", companions:["basil","marigold","parsley","carrot"], avoid:["fennel","brassica","potato"], notes:"Indeterminate. Deep mahogany cherry. Complex rich flavor. Top market seller.", isVertical:true, trellisType:"stake", heightFt:6, successionInterval:0, yieldPerPlant:"15-20 lbs", isMarketCrop:true, feedingCategory:"heavy", inInventory:true },
+  { id:"tomato-sungold", name:"Tomato", variety:"Sungold", category:"tomato", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:8, directSowDate:null, daysToMaturity:57, harvestWindow:"July-October", companions:["basil","marigold","parsley","carrot"], avoid:["fennel","brassica","potato"], notes:"Indeterminate orange cherry. Exceptionally sweet. Top farmers market variety.", isVertical:true, trellisType:"stake", heightFt:6, successionInterval:0, yieldPerPlant:"15-20 lbs", isMarketCrop:true, feedingCategory:"heavy", inInventory:true },
+  { id:"tomato-sanmarzano", name:"Tomato", variety:"San Marzano", category:"tomato", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:8, directSowDate:null, daysToMaturity:80, harvestWindow:"August-October", companions:["basil","marigold","parsley","carrot"], avoid:["fennel","brassica","potato"], notes:"Indeterminate Italian paste heirloom. The gold standard for sauce.", isVertical:true, trellisType:"stake", heightFt:6, successionInterval:0, yieldPerPlant:"15-20 lbs", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"tomato-umpquabeauty", name:"Tomato", variety:"Umpqua Beauty", category:"tomato", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:8, directSowDate:null, daysToMaturity:80, harvestWindow:"August-October", companions:["basil","marigold","parsley","carrot"], avoid:["fennel","brassica","potato"], notes:"Oregon heirloom. Indeterminate. Large beautiful fruits. Great local heritage story for farmers market.", isVertical:true, trellisType:"stake", heightFt:6, successionInterval:0, yieldPerPlant:"15-20 lbs", isMarketCrop:true, feedingCategory:"heavy", inInventory:true },
+  { id:"tomato-sweetmillion", name:"Tomato", variety:"Sweet Million", category:"tomato", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:8, directSowDate:null, daysToMaturity:65, harvestWindow:"July-October", companions:["basil","marigold","parsley","carrot"], avoid:["fennel","brassica","potato"], notes:"Indeterminate cherry. Very sweet. Crack resistant. Prolific producer.", isVertical:true, trellisType:"stake", heightFt:6, successionInterval:0, yieldPerPlant:"15-20 lbs", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"tomato-newyorker", name:"Tomato", variety:"New Yorker", category:"tomato", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:8, directSowDate:null, daysToMaturity:64, harvestWindow:"July-September", companions:["basil","marigold","parsley","carrot"], avoid:["fennel","brassica","potato"], notes:"Determinate. Early variety for short seasons.", isVertical:false, trellisType:"cage", heightFt:3, successionInterval:0, yieldPerPlant:"10-12 lbs", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"tomato-littlenapolio", name:"Tomato", variety:"Little Napoli", category:"tomato", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:8, directSowDate:null, daysToMaturity:72, harvestWindow:"August-October", companions:["basil","marigold","parsley","carrot"], avoid:["fennel","brassica","potato"], notes:"Determinate Roma/paste type. Italian variety. Good for sauce.", isVertical:false, trellisType:"cage", heightFt:3, successionInterval:0, yieldPerPlant:"10-12 lbs", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  // ===== EXTRA PEPPERS (from spec) =====
+  { id:"pepper-yellowsweet", name:"Pepper", variety:"Yellow Sweet Bell", category:"pepper", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:10, directSowDate:null, daysToMaturity:70, harvestWindow:"August-October", companions:["basil","carrot","marigold","onion"], avoid:["fennel","kohlrabi"], notes:"Sweet yellow bell type.", isVertical:false, trellisType:null, heightFt:2, successionInterval:0, yieldPerPlant:"20-30 fruits", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"pepper-jamaicanhabanero", name:"Pepper", variety:"Jamaican Habanero", category:"pepper", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:10, directSowDate:null, daysToMaturity:100, harvestWindow:"August-October", companions:["basil","carrot","marigold"], avoid:["fennel","kohlrabi"], notes:"Very hot. Long season — start early Feb. Needs heat to ripen fully.", isVertical:false, trellisType:null, heightFt:2, successionInterval:0, yieldPerPlant:"20-30 fruits", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"pepper-scotchbonnet", name:"Pepper", variety:"Scotch Bonnet Yellow", category:"pepper", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:10, directSowDate:null, daysToMaturity:100, harvestWindow:"August-October", companions:["basil","carrot","marigold"], avoid:["fennel","kohlrabi"], notes:"Extremely hot. Caribbean heirloom. Start Feb 5.", isVertical:false, trellisType:null, heightFt:2, successionInterval:0, yieldPerPlant:"20-30 fruits", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"pepper-habanerored", name:"Pepper", variety:"Habanero Red", category:"pepper", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:10, directSowDate:null, daysToMaturity:100, harvestWindow:"August-October", companions:["basil","carrot","marigold"], avoid:["fennel","kohlrabi"], notes:"Very hot. Classic orange-red habanero.", isVertical:false, trellisType:null, heightFt:2, successionInterval:0, yieldPerPlant:"20-30 fruits", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"pepper-jalapeno", name:"Pepper", variety:"Jalapeño", category:"pepper", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:10, directSowDate:null, daysToMaturity:72, harvestWindow:"July-October", companions:["basil","carrot","marigold","onion"], avoid:["fennel","kohlrabi"], notes:"Medium heat. Very prolific. Top market seller.", isVertical:false, trellisType:null, heightFt:2, successionInterval:0, yieldPerPlant:"25-30 fruits", isMarketCrop:true, feedingCategory:"heavy", inInventory:true },
+  { id:"pepper-poblano", name:"Pepper", variety:"Poblano", category:"pepper", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:10, directSowDate:null, daysToMaturity:75, harvestWindow:"August-October", companions:["basil","carrot","marigold","onion"], avoid:["fennel","kohlrabi"], notes:"Mild-medium heat. Classic poblano. Excellent for roasting. Dried = ancho.", isVertical:false, trellisType:null, heightFt:2, successionInterval:0, yieldPerPlant:"20-30 fruits", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"pepper-prismbell", name:"Pepper", variety:"Prism Bell", category:"pepper", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:10, directSowDate:null, daysToMaturity:70, harvestWindow:"August-October", companions:["basil","carrot","marigold","onion"], avoid:["fennel","kohlrabi"], notes:"Mixed color bell pepper variety.", isVertical:false, trellisType:null, heightFt:2, successionInterval:0, yieldPerPlant:"20-30 fruits", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  // ===== EXTRA CUCUMBERS =====
+  { id:"cucumber-improvedlonggreen", name:"Cucumber", variety:"Improved Long Green", category:"cucumber", sfgCount:1, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:3, directSowDate:"May 1", daysToMaturity:65, harvestWindow:"July-September", companions:["bean","pea","sunflower","marigold","nasturtium"], avoid:["sage","potato"], notes:"Classic slicing variety. Direct sow after May 1 or transplant. Needs trellis.", isVertical:true, trellisType:"vertical", heightFt:5, successionInterval:3, yieldPerPlant:"10-20 fruits", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"cucumber-spacemaster", name:"Cucumber", variety:"Spacemaster", category:"cucumber", sfgCount:1, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:3, directSowDate:"May 1", daysToMaturity:60, harvestWindow:"July-September", companions:["bean","pea","sunflower","marigold"], avoid:["sage","potato"], notes:"Compact bush type. Good for containers (5-20 gal). Less sprawl.", isVertical:false, trellisType:null, heightFt:2, successionInterval:3, yieldPerPlant:"10-15 fruits", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"cucumber-nationalpickle", name:"Cucumber", variety:"National Pickle", category:"cucumber", sfgCount:1, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:3, directSowDate:"May 1", daysToMaturity:55, harvestWindow:"July-August", companions:["bean","dill","marigold","nasturtium"], avoid:["sage","potato"], notes:"Pickling type. Harvest young at 3-4 inches. Succession sow every 3 weeks.", isVertical:true, trellisType:"vertical", heightFt:5, successionInterval:3, yieldPerPlant:"15-20 fruits", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"cucumber-sweetslice", name:"Cucumber", variety:"Sweet Slice", category:"cucumber", sfgCount:1, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:3, directSowDate:"May 1", daysToMaturity:63, harvestWindow:"July-September", companions:["bean","sunflower","marigold"], avoid:["sage","potato"], notes:"Long slicing type. Mild sweet flavor. Burpless. Good fresh eating and market.", isVertical:true, trellisType:"vertical", heightFt:5, successionInterval:3, yieldPerPlant:"10-15 fruits", isMarketCrop:true, feedingCategory:"heavy", inInventory:true },
+  // ===== EXTRA GREENS & BRASSICAS =====
+  { id:"lettuce-romaine", name:"Lettuce", variety:"Paris Island Romaine", category:"lettuce", sfgCount:4, sunReq:"part", startMethod:"either", weeksBeforeLastFrost:4, directSowDate:"March 1", daysToMaturity:70, harvestWindow:"May-July, Sep-Nov", companions:["carrot","radish","chive","strawberry"], avoid:["celery","parsley"], notes:"Classic romaine. Upright heads. Good bolt resistance.", isVertical:false, trellisType:null, heightFt:0.8, successionInterval:3, yieldPerPlant:"0.75 lb", isMarketCrop:false, feedingCategory:"light", inInventory:true },
+  { id:"kale-curly", name:"Kale", variety:"Curly Green", category:"brassica", sfgCount:1, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:6, directSowDate:"March 15", daysToMaturity:55, harvestWindow:"May-November", companions:["celery","dill","herb"], avoid:["tomato","strawberry"], notes:"Classic curly kale. Hardy and productive.", isVertical:false, trellisType:null, heightFt:2, successionInterval:0, yieldPerPlant:"2 lbs/month", isMarketCrop:false, feedingCategory:"heavy", inInventory:true },
+  { id:"broccoli-purple-sprouting", name:"Broccoli", variety:"Purple Sprouting", category:"brassica", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:6, directSowDate:null, daysToMaturity:90, harvestWindow:"April-June", companions:["dill","celery","herb"], avoid:["tomato","strawberry","pepper"], notes:"Overwintering type. Start summer for spring harvest. Very cold hardy.", isVertical:false, trellisType:null, heightFt:2.5, successionInterval:0, yieldPerPlant:"1-2 lbs", isMarketCrop:false, feedingCategory:"heavy", inInventory:false },
+  { id:"mustard-green", name:"Mustard Greens", variety:"Southern Giant Curled", category:"greens", sfgCount:9, sunReq:"part", startMethod:"direct", weeksBeforeLastFrost:4, directSowDate:"March 1", daysToMaturity:40, harvestWindow:"April-June, Sep-Oct", companions:["lettuce","spinach"], avoid:["none"], notes:"Spicy and fast. Great for fall succession. Very cold hardy.", isVertical:false, trellisType:null, heightFt:0.8, successionInterval:4, yieldPerPlant:"0.3 lb", isMarketCrop:false, feedingCategory:"light", inInventory:false },
+  { id:"mizuna", name:"Mizuna", variety:"Japanese", category:"greens", sfgCount:9, sunReq:"shade", startMethod:"direct", weeksBeforeLastFrost:4, directSowDate:"March 1", daysToMaturity:35, harvestWindow:"April-June, Aug-Oct", companions:["lettuce","spinach","radish"], avoid:["none"], notes:"Japanese salad green. Mild, feathery leaves. Very shade tolerant.", isVertical:false, trellisType:null, heightFt:0.5, successionInterval:3, yieldPerPlant:"0.25 lb", isMarketCrop:false, feedingCategory:"light", inInventory:true },
+  // ===== EXTRA HERBS =====
+  { id:"basil-purple", name:"Basil", variety:"Purple Ruffles", category:"herb", sfgCount:1, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:4, directSowDate:null, daysToMaturity:65, harvestWindow:"June-September", companions:["tomato","pepper","marigold"], avoid:["sage","rue"], notes:"Beautiful purple basil. Ornamental and culinary.", isVertical:false, trellisType:null, heightFt:1.5, successionInterval:4, yieldPerPlant:"0.5 lb", isMarketCrop:false, feedingCategory:"light", inInventory:true },
+  { id:"oregano-greek", name:"Oregano", variety:"Greek", category:"herb", sfgCount:4, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:4, directSowDate:"April 1", daysToMaturity:80, harvestWindow:"June-September", companions:["tomato","pepper","squash"], avoid:["none"], notes:"Perennial. Very aromatic. Dry for winter use.", isVertical:false, trellisType:null, heightFt:1, successionInterval:0, yieldPerPlant:"0.25 lb/yr", isMarketCrop:false, feedingCategory:"neutral", inInventory:true },
+  { id:"thyme-english", name:"Thyme", variety:"English", category:"herb", sfgCount:4, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:4, directSowDate:"April 1", daysToMaturity:75, harvestWindow:"May-September", companions:["tomato","brassica","strawberry"], avoid:["none"], notes:"Perennial ground cover herb. Excellent companion for brassicas.", isVertical:false, trellisType:null, heightFt:0.5, successionInterval:0, yieldPerPlant:"0.1 lb/yr", isMarketCrop:false, feedingCategory:"neutral", inInventory:true },
+  { id:"sage-common", name:"Sage", variety:"Common", category:"herb", sfgCount:1, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:4, directSowDate:"April 1", daysToMaturity:75, harvestWindow:"May-October", companions:["brassica","carrot","strawberry","rosemary"], avoid:["cucumber","onion","rue"], notes:"Perennial. Deters pests. Keep away from cucumbers.", isVertical:false, trellisType:null, heightFt:2, successionInterval:0, yieldPerPlant:"0.2 lb/yr", isMarketCrop:false, feedingCategory:"neutral", inInventory:true },
+  // ===== BEANS & PEAS extra =====
+  { id:"pole-bean-kentucky", name:"Pole Bean", variety:"Kentucky Wonder", category:"bean", sfgCount:8, sunReq:"full", startMethod:"direct", weeksBeforeLastFrost:0, directSowDate:"May 1", daysToMaturity:65, harvestWindow:"July-September", companions:["carrot","cucumber","squash","nasturtium"], avoid:["onion","garlic","fennel"], notes:"Prolific pole bean. Needs 5-6ft trellis. Classic heirloom.", isVertical:true, trellisType:"vertical", heightFt:6, successionInterval:0, yieldPerPlant:"0.75 lb", isMarketCrop:false, feedingCategory:"fixer", inInventory:true },
+  { id:"pea-oregon-sugar-pod", name:"Pea", variety:"Oregon Sugar Pod", category:"pea", sfgCount:8, sunReq:"full", startMethod:"direct", weeksBeforeLastFrost:6, directSowDate:"March 1", daysToMaturity:60, harvestWindow:"May-June", companions:["carrot","radish","lettuce","spinach"], avoid:["onion","garlic","leek"], notes:"Oregon heirloom snow pea. Very productive. Developed for Pacific NW.", isVertical:true, trellisType:"vertical", heightFt:4, successionInterval:0, yieldPerPlant:"0.5 lb", isMarketCrop:false, feedingCategory:"fixer", inInventory:true },
+  // ===== SQUASH =====
+  { id:"squash-spaghetti", name:"Winter Squash", variety:"Spaghetti", category:"squash", sfgCount:4, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:1, directSowDate:"May 1", daysToMaturity:88, harvestWindow:"September-October", companions:["corn","bean","nasturtium","marigold"], avoid:["potato"], notes:"Unique spaghetti-like flesh when cooked. Stores well.", isVertical:false, trellisType:null, heightFt:2, successionInterval:0, yieldPerPlant:"2-3 fruits", isMarketCrop:false, feedingCategory:"heavy", inInventory:false },
+  { id:"squash-butternut", name:"Winter Squash", variety:"Butternut", category:"squash", sfgCount:4, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:1, directSowDate:"May 1", daysToMaturity:110, harvestWindow:"September-October", companions:["corn","bean","nasturtium"], avoid:["potato"], notes:"Classic butternut. Excellent storage squash. Needs long warm season.", isVertical:false, trellisType:null, heightFt:2, successionInterval:0, yieldPerPlant:"3-5 fruits", isMarketCrop:true, feedingCategory:"heavy", inInventory:false },
+  { id:"zucchini-yellow-crookneck", name:"Summer Squash", variety:"Yellow Crookneck", category:"squash", sfgCount:4, sunReq:"full", startMethod:"either", weeksBeforeLastFrost:1, directSowDate:"May 1", daysToMaturity:53, harvestWindow:"June-October", companions:["nasturtium","marigold","bean","corn"], avoid:["potato"], notes:"Yellow summer squash. Prolific. Great for market.", isVertical:false, trellisType:null, heightFt:3, successionInterval:4, yieldPerPlant:"6-10 lbs", isMarketCrop:true, feedingCategory:"heavy", inInventory:true },
+  // ===== ALLIUMS extra =====
+  { id:"onion-red-torpedo", name:"Onion", variety:"Red Torpedo", category:"allium", sfgCount:4, sunReq:"full", startMethod:"greenhouse", weeksBeforeLastFrost:12, directSowDate:null, daysToMaturity:110, harvestWindow:"July-August", companions:["carrot","lettuce","beet","chamomile"], avoid:["pea","bean","asparagus"], notes:"Italian torpedo onion. Beautiful elongated red form. Great market variety.", isVertical:false, trellisType:null, heightFt:1.5, successionInterval:0, yieldPerPlant:"0.4 lb", isMarketCrop:true, feedingCategory:"light", inInventory:true },
+  { id:"scallion-evergreen", name:"Scallion", variety:"Evergreen White Bunching", category:"allium", sfgCount:16, sunReq:"part", startMethod:"direct", weeksBeforeLastFrost:4, directSowDate:"March 1", daysToMaturity:60, harvestWindow:"May-October", companions:["carrot","lettuce","beet"], avoid:["pea","bean"], notes:"Perennial bunching onion. Pull as needed. Great succession crop.", isVertical:false, trellisType:null, heightFt:1, successionInterval:4, yieldPerPlant:"bunch", isMarketCrop:false, feedingCategory:"light", inInventory:true }
+];
+
+// =====================================================
+// TAB 2: BED & CONTAINER PLANNER
+// =====================================================
+
+// ---- CROP HELPERS ----
+const CROP_COLORS = {
+  tomato:'#c0392b', pepper:'#e67e22', cucumber:'#27ae60', squash:'#f39c12',
+  bean:'#3498db', pea:'#2ecc71', brassica:'#8e44ad', lettuce:'#1abc9c',
+  greens:'#16a085', root:'#d35400', allium:'#9b59b6', herb:'#1dd2af',
+  flower:'#e91e8c', melon:'#e74c3c', corn:'#f1c40f', eggplant:'#6c3483',
+  tomatillo:'#a93226', pea:'#2ecc71'
+};
+function getCropColor(crop) { return crop ? (CROP_COLORS[crop.category] || '#555') : null; }
+function getCropById(id) { return id ? CROP_LIBRARY.find(c=>c.id===id) : null; }
+function getZoneForRow(row) { return row<=10?'full':row<=16?'part':'shade'; }
+function zoneName(z) { return z==='full'?'Full Sun':z==='part'?'Part Sun':'Shade'; }
+function cellKey(bed,row,col) { return `${bed}-${row}-${col}`; }
+function shortName(crop) {
+  if (!crop) return '';
+  const w = (crop.variety||crop.name).split(' ');
+  return w.length===1 ? w[0].slice(0,6) : (w[0].slice(0,3)+' '+w[w.length-1].slice(0,3));
+}
+function textColor(hexBg) {
+  const c = parseInt(hexBg.slice(1),16);
+  const r=(c>>16)&255,g=(c>>8)&255,b=c&255;
+  return (r*299+g*587+b*114)/1000>128 ? '#111' : '#fff';
+}
+
+// ---- BED STATE ----
+// state.beds[key] = { cropId, companionId, p2CropId, p1Clear, isMarketCrop, notes, trellisType, showTrellis }
+// state.containers = [ { id, type, x, y, cropId, notes } ]
+if (!state.beds) state.beds = {};
+if (!state.containers) state.containers = [];
+if (!state.trellisVisible) state.trellisVisible = false;
+
+// ---- BUILD GRIDS ----
+function buildBedGrids() {
+  ['A','B'].forEach(bed => {
+    const tbl = document.getElementById('bed-grid-'+bed);
+    if (!tbl) return;
+    tbl.innerHTML = '';
+    // header row
+    const hdr = tbl.insertRow();
+    hdr.insertCell().innerHTML = '<th style="width:20px;color:var(--text3);font-size:.65rem;"></th>';
+    ['A','B','C','D'].forEach(col => {
+      const th = document.createElement('th'); th.textContent = col; hdr.appendChild(th);
+    });
+    // rows 1-20
+    for (let row=1; row<=20; row++) {
+      const tr = tbl.insertRow();
+      tr.className = (row===11||row===17) ? 'zone-divider' : '';
+      // row number
+      const rnc = tr.insertCell();
+      rnc.innerHTML = `<span style="font-size:.6rem;color:var(--text3);padding-right:3px;">${row}</span>`;
+      rnc.style.width = '20px';
+      for (let col=1; col<=4; col++) {
+        const td = tr.insertCell();
+        const key = cellKey(bed,row,col);
+        const zone = getZoneForRow(row);
+        td.dataset.key = key; td.dataset.bed = bed; td.dataset.row = row; td.dataset.col = col;
+        td.className = 'zone-'+zone;
+        td.onclick = () => openDetailModal(bed,row,col);
+        updateCell(td, key);
+      }
+    }
+  });
+  buildZoneLabels();
+}
+
+function buildZoneLabels() {
+  const col = document.getElementById('zone-label-col');
+  if (!col) return;
+  col.innerHTML = '';
+  const cellH = 30; // cell height px
+  // 10 rows full sun
+  const fullDiv = document.createElement('div');
+  fullDiv.className = 'zone-label-block full';
+  fullDiv.style.height = (10*cellH)+'px';
+  fullDiv.textContent = 'Full Sun';
+  // 6 rows part sun
+  const partDiv = document.createElement('div');
+  partDiv.className = 'zone-label-block part';
+  partDiv.style.height = (6*cellH)+'px';
+  partDiv.textContent = 'Part';
+  // 4 rows shade
+  const shadeDiv = document.createElement('div');
+  shadeDiv.className = 'zone-label-block shade';
+  shadeDiv.style.height = (4*cellH)+'px';
+  shadeDiv.textContent = 'Shade';
+  col.append(fullDiv,partDiv,shadeDiv);
+}
+
+function updateCell(td, key) {
+  if (!td) return;
+  const data = state.beds[key];
+  td.innerHTML = '';
+  const zone = getZoneForRow(parseInt(td.dataset.row));
+  td.className = 'zone-'+zone + (data && data.cropId ? '' : ' empty');
+  if (!data || !data.cropId) { td.textContent = '·'; return; }
+  const crop = getCropById(data.cropId);
+  if (!crop) return;
+  const bg = getCropColor(crop);
+  td.style.backgroundColor = bg;
+  td.style.color = textColor(bg);
+  // Zone mismatch
+  const zoneMismatch = (zone==='full'&&crop.sunReq!=='full')||(zone==='shade'&&crop.sunReq==='full');
+  if (zoneMismatch) td.classList.add('warn-zone');
+  // Companion conflict
+  if (data.companionId) {
+    const comp = getCropById(data.companionId);
+    if (comp && crop.avoid && crop.avoid.some(a=>comp.category.includes(a)||comp.id.includes(a))) td.classList.add('warn-companion');
+  }
+  // Trellis overlay
+  if (state.trellisVisible && crop.isVertical) td.classList.add('trellis-structure');
+  if (state.trellisVisible && crop.isVertical) markTrellisShade(td.dataset.bed, parseInt(td.dataset.row), parseInt(td.dataset.col));
+  // Content
+  const label = document.createElement('span');
+  label.textContent = shortName(crop);
+  label.style.cssText = 'display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:32px;margin:0 auto;';
+  td.appendChild(label);
+  // Icons
+  const icons = document.createElement('div');
+  icons.className = 'cell-icons';
+  if (crop.isVertical) { const i=document.createElement('div'); i.className='cell-icon cell-icon-trellis'; icons.appendChild(i); }
+  if (data.p2CropId) { const i=document.createElement('div'); i.className='cell-icon cell-icon-succession'; icons.appendChild(i); }
+  if (data.companionId) { const i=document.createElement('div'); i.className='cell-icon cell-icon-companion'; icons.appendChild(i); }
+  td.appendChild(icons);
+  // Tooltip
+  let tip = `${crop.name} ${crop.variety} | Zone: ${zoneName(zone)} | SFG: ${crop.sfgCount}/sqft`;
+  if (data.companionId) { const cc=getCropById(data.companionId); if(cc) tip += ` | Companion: ${cc.name}`; }
+  if (zoneMismatch) tip += ' | ⚠ Zone mismatch!';
+  td.title = tip;
+}
+
+function markTrellisShade(bed, row, col) {
+  // Shade next 2 rows south (higher row numbers)
+  for (let r=row+1; r<=Math.min(row+2,20); r++) {
+    const sibling = document.querySelector(`#bed-grid-${bed} td[data-row="${r}"][data-col="${col}"]`);
+    if (sibling && !sibling.style.backgroundColor) sibling.classList.add('trellis-shade');
+  }
+}
+
+function refreshAllCells() {
+  document.querySelectorAll('.bed-grid td[data-key]').forEach(td => {
+    updateCell(td, td.dataset.key);
+  });
+}
+
+// ---- TRELLIS LAYER ----
+function toggleTrellisLayer() {
+  state.trellisVisible = !state.trellisVisible;
+  const btn = document.getElementById('trellis-toggle-btn');
+  btn.textContent = state.trellisVisible ? 'Hide Trellis Layer' : 'Show Trellis Layer';
+  btn.className = state.trellisVisible ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm';
+  // Remove existing shade
+  document.querySelectorAll('.trellis-shade,.trellis-structure').forEach(el => {
+    el.classList.remove('trellis-shade','trellis-structure');
+  });
+  refreshAllCells();
+  autoSave();
+}
+
+// ---- DETAIL MODAL ----
+let detailTarget = null; // { bed, row, col, key }
+let selectedCropId = null;
+let selectedP2CropId = null;
+let selectedCompanionId = null;
+
+function openDetailModal(bed, row, col) {
+  const key = cellKey(bed,row,col);
+  const zone = getZoneForRow(row);
+  detailTarget = {bed,row,col,key,zone};
+  const data = state.beds[key] || {};
+
+  document.getElementById('detail-title').textContent = `Bed ${bed} · Row ${row} · Col ${'ABCD'[col-1]}`;
+  document.getElementById('detail-loc').textContent = `${zoneName(zone)} Zone`;
+
+  // Reset
+  selectedCropId = data.cropId || null;
+  selectedP2CropId = data.p2CropId || null;
+  selectedCompanionId = data.companionId || null;
+
+  // Main crop
+  const crop = getCropById(selectedCropId);
+  const input = document.getElementById('dp-crop-search');
+  input.value = crop ? `${crop.name} — ${crop.variety}` : '';
+  document.getElementById('dp-crop-dropdown').style.display = 'none';
+  updateDetailCropInfo();
+
+  // Market toggle
+  document.getElementById('dp-market').checked = data.isMarketCrop || false;
+
+  // Phase 2
+  const p2en = !!(data.p2CropId);
+  document.getElementById('dp-p2-enable').checked = p2en;
+  document.getElementById('dp-phase2-fields').style.display = p2en ? '' : 'none';
+  document.getElementById('dp-p1-clear').value = data.p1Clear || '';
+  const p2crop = getCropById(selectedP2CropId);
+  document.getElementById('dp-p2-search').value = p2crop ? `${p2crop.name} — ${p2crop.variety}` : '';
+  document.getElementById('dp-p2-dropdown').style.display = 'none';
+  updateDetailP2Info();
+  updateTimeline();
+
+  // Notes
+  document.getElementById('dp-notes').value = data.notes || '';
+
+  document.getElementById('detail-modal').classList.add('open');
+}
+
+function closeDetailModal() {
+  document.getElementById('detail-modal').classList.remove('open');
+  detailTarget = null;
+}
+
+function updateDetailCropInfo() {
+  const crop = getCropById(selectedCropId);
+  const infoEl = document.getElementById('dp-crop-info');
+  const warnEl = document.getElementById('dp-zone-warn');
+  const trellisRow = document.getElementById('dp-trellis-row');
+  const soilEl = document.getElementById('dp-soil-info');
+
+  if (!crop) {
+    infoEl.style.display = 'none';
+    warnEl.style.display = 'none';
+    trellisRow.style.display = 'none';
+    soilEl.textContent = 'Select a crop to see soil recommendations.';
+    updateCompanionCards(null);
+    return;
+  }
+  infoEl.style.display = '';
+  // Build info
+  let ghostDt = '—';
+  if (crop.startMethod !== 'direct' && state.lastFrost) {
+    const parts = state.lastFrost.split(' ');
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const mIdx = months.findIndex(m=>state.lastFrost.startsWith(m));
+    if (mIdx >= 0) {
+      const d = new Date(2025, mIdx, parseInt(parts[1]||'1'));
+      d.setDate(d.getDate() - crop.weeksBeforeLastFrost*7);
+      ghostDt = d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    }
+  }
+  infoEl.innerHTML = `<b>${crop.name} — ${crop.variety}</b><br>
+    SFG: ${crop.sfgCount}/sq ft &nbsp;|&nbsp; Sun: ${crop.sunReq} &nbsp;|&nbsp; DTM: ${crop.daysToMaturity} days<br>
+    Start: ${crop.startMethod} &nbsp;|&nbsp; GH start: ${ghostDt}<br>
+    Harvest: ${crop.harvestWindow} &nbsp;|&nbsp; Yield: ${crop.yieldPerPlant}<br>
+    <em style="color:var(--text3)">${crop.notes}</em>`;
+
+  // Zone warn
+  const zone = detailTarget ? detailTarget.zone : 'full';
+  const mismatch = (zone==='full'&&crop.sunReq!=='full')||(zone==='shade'&&crop.sunReq==='full')||
+    (zone==='part'&&crop.sunReq==='full')||(zone==='shade'&&crop.sunReq==='part');
+  warnEl.style.display = mismatch ? '' : 'none';
+  if (mismatch) warnEl.textContent = `⚠ ${crop.name} needs ${crop.sunReq} sun but cell is ${zoneName(zone)}`;
+
+  // Trellis
+  trellisRow.style.display = crop.isVertical ? '' : 'none';
+  if (crop.isVertical && crop.trellisType) {
+    document.getElementById('dp-trellis-type').value = crop.trellisType;
+  }
+
+  // Soil
+  const SOIL_INFO = {
+    heavy: 'Heavy Feeder — Add compost + balanced fertilizer at planting. Side-dress with nitrogen mid-season.',
+    light: 'Light Feeder — Minimal amendments needed. Light compost is sufficient.',
+    fixer: 'Nitrogen Fixer — Do not add nitrogen fertilizer. Inoculant recommended for new beds.',
+    neutral: 'Neutral — Standard compost at planting. No special soil amendments required.'
+  };
+  soilEl.innerHTML = `<strong>${crop.feedingCategory==='heavy'?'Heavy Feeder':crop.feedingCategory==='light'?'Light Feeder':crop.feedingCategory==='fixer'?'Nitrogen Fixer':'Neutral'}</strong><br>${SOIL_INFO[crop.feedingCategory]||''}`;
+
+  updateCompanionCards(crop);
+}
+
+function updateCompanionCards(crop) {
+  const el = document.getElementById('dp-companion-cards');
+  if (!crop) { el.innerHTML = '<div style="font-size:.78rem;color:var(--text3);">Select a main crop first.</div>'; return; }
+  const comps = crop.companions || [];
+  const suggestions = CROP_LIBRARY.filter(c => {
+    if (c.id === crop.id) return false;
+    return comps.some(name => c.id.includes(name) || c.name.toLowerCase().includes(name) || c.category===name);
+  }).slice(0,4);
+  if (!suggestions.length) { el.innerHTML = '<div style="font-size:.78rem;color:var(--text3);">No companion data available.</div>'; return; }
+  el.innerHTML = '';
+  suggestions.forEach(s => {
+    const div = document.createElement('div');
+    div.className = 'companion-card' + (selectedCompanionId===s.id?' selected':'');
+    const dot = document.createElement('div');
+    dot.style.cssText = `width:10px;height:10px;border-radius:50%;background:${getCropColor(s)};flex-shrink:0;`;
+    const info = document.createElement('div');
+    info.innerHTML = `<strong>${s.name}</strong> <span style="color:var(--text3)">${s.variety}</span><br><span style="font-size:.73rem;color:var(--text3);">Companion: ${comps.slice(0,2).join(', ')}</span>`;
+    div.append(dot, info);
+    div.onclick = () => {
+      selectedCompanionId = selectedCompanionId === s.id ? null : s.id;
+      updateCompanionCards(crop);
+      checkCompanionConflict(crop, s);
+    };
+    el.appendChild(div);
+  });
+  // None option
+  const none = document.createElement('div');
+  none.className = 'companion-card' + (!selectedCompanionId?' selected':'');
+  none.innerHTML = '<em style="color:var(--text3)">No companion</em>';
+  none.onclick = () => { selectedCompanionId = null; updateCompanionCards(crop); };
+  el.appendChild(none);
+}
+
+function checkCompanionConflict(crop, comp) {
+  const el = document.getElementById('dp-companion-conflict');
+  if (!comp || !crop) { el.style.display='none'; return; }
+  const conflict = (crop.avoid||[]).some(a=>comp.id.includes(a)||comp.category===a) ||
+                   (comp.avoid||[]).some(a=>crop.id.includes(a)||crop.category===a);
+  el.style.display = conflict ? '' : 'none';
+  el.textContent = conflict ? `⚠ ${crop.name} and ${comp.name} are not compatible` : '';
+}
+
+function filterDetailCrops() {
+  const q = document.getElementById('dp-crop-search').value.toLowerCase();
+  const dd = document.getElementById('dp-crop-dropdown');
+  if (!q) { dd.style.display='none'; return; }
+  const matches = CROP_LIBRARY.filter(c => `${c.name} ${c.variety}`.toLowerCase().includes(q)).slice(0,12);
+  dd.innerHTML = matches.map(c => `<div style="padding:5px 10px;cursor:pointer;font-size:.8rem;border-bottom:1px solid var(--border);"
+    onmousedown="selectDetailCrop('${c.id}')">${c.name} — <span style='color:var(--text3)'>${c.variety}</span></div>`).join('');
+  dd.style.display = matches.length ? '' : 'none';
+}
+
+function selectDetailCrop(id) {
+  selectedCropId = id;
+  const crop = getCropById(id);
+  document.getElementById('dp-crop-search').value = crop ? `${crop.name} — ${crop.variety}` : '';
+  document.getElementById('dp-crop-dropdown').style.display = 'none';
+  selectedCompanionId = null;
+  updateDetailCropInfo();
+}
+
+function filterDetailCropsP2() {
+  const q = document.getElementById('dp-p2-search').value.toLowerCase();
+  const dd = document.getElementById('dp-p2-dropdown');
+  if (!q) { dd.style.display='none'; return; }
+  const matches = CROP_LIBRARY.filter(c => `${c.name} ${c.variety}`.toLowerCase().includes(q)).slice(0,10);
+  dd.innerHTML = matches.map(c => `<div style="padding:5px 10px;cursor:pointer;font-size:.8rem;border-bottom:1px solid var(--border);"
+    onmousedown="selectDetailCropP2('${c.id}')">${c.name} — <span style='color:var(--text3)'>${c.variety}</span></div>`).join('');
+  dd.style.display = matches.length ? '' : 'none';
+}
+
+function selectDetailCropP2(id) {
+  selectedP2CropId = id;
+  const crop = getCropById(id);
+  document.getElementById('dp-p2-search').value = crop ? `${crop.name} — ${crop.variety}` : '';
+  document.getElementById('dp-p2-dropdown').style.display = 'none';
+  updateDetailP2Info();
+  updateTimeline();
+}
+
+function updateDetailP2Info() {
+  const crop = getCropById(selectedP2CropId);
+  const el = document.getElementById('dp-p2-info');
+  if (!crop) { el.style.display='none'; return; }
+  el.style.display = '';
+  el.innerHTML = `<b>${crop.name} — ${crop.variety}</b> | DTM: ${crop.daysToMaturity}d | Harvest: ${crop.harvestWindow}`;
+}
+
+function togglePhase2() {
+  const en = document.getElementById('dp-p2-enable').checked;
+  document.getElementById('dp-phase2-fields').style.display = en ? '' : 'none';
+  if (!en) { selectedP2CropId=null; updateTimeline(); }
+}
+
+function updateTimeline() {
+  const bar = document.getElementById('dp-timeline-bar');
+  if (!bar) return;
+  bar.innerHTML = '';
+  // Mar=0, Nov=100%: 9 months = 100%
+  const months = {Mar:0,Apr:11.1,May:22.2,Jun:33.3,Jul:44.4,Aug:55.5,Sep:66.6,Oct:77.7,Nov:88.8};
+  const crop1 = getCropById(selectedCropId);
+  const crop2 = getCropById(selectedP2CropId);
+  const p1Clear = document.getElementById('dp-p1-clear') ? document.getElementById('dp-p1-clear').value : '';
+
+  if (crop1) {
+    const hw = crop1.harvestWindow||'';
+    const parts = hw.split('-');
+    const s = months[parts[0]?.slice(0,3)] ?? 0;
+    const e = months[parts[1]?.slice(0,3)] ?? 44;
+    const seg = document.createElement('div');
+    seg.className = 'timeline-seg';
+    seg.style.cssText = `left:${s}%;width:${e-s}%;background:var(--green2);border-radius:3px;`;
+    seg.title = `Phase 1: ${hw}`;
+    bar.appendChild(seg);
+  }
+  if (crop2) {
+    const hw = crop2.harvestWindow||'';
+    const parts = hw.split('-');
+    const s = months[parts[0]?.slice(0,3)] ?? 55;
+    const e = months[parts[1]?.slice(0,3)] ?? 89;
+    const seg = document.createElement('div');
+    seg.className = 'timeline-seg';
+    seg.style.cssText = `left:${s}%;width:${Math.max(5,e-s)}%;background:var(--blue2);border-radius:3px;`;
+    seg.title = `Phase 2: ${hw}`;
+    bar.appendChild(seg);
+  }
+}
+
+function saveDetailCell() {
+  if (!detailTarget) return;
+  const {key} = detailTarget;
+  state.beds[key] = {
+    cropId: selectedCropId,
+    companionId: selectedCompanionId,
+    p2CropId: selectedP2CropId,
+    p1Clear: document.getElementById('dp-p1-clear').value,
+    isMarketCrop: document.getElementById('dp-market').checked,
+    notes: document.getElementById('dp-notes').value,
+    trellisType: selectedCropId && getCropById(selectedCropId)?.isVertical ? document.getElementById('dp-trellis-type').value : null
+  };
+  autoSave();
+  // Refresh cell in grid
+  const td = document.querySelector(`.bed-grid td[data-key="${key}"]`);
+  if (td) updateCell(td, key);
+  closeDetailModal();
+}
+
+function clearDetailCell() {
+  if (!detailTarget) return;
+  delete state.beds[detailTarget.key];
+  autoSave();
+  const td = document.querySelector(`.bed-grid td[data-key="${detailTarget.key}"]`);
+  if (td) updateCell(td, detailTarget.key);
+  closeDetailModal();
+}
+
+// ---- CONTAINER ZONE ----
+const CONTAINER_SIZES = {
+  '1gal':  {w:15,h:15,sqft:.25,label:'1 Gal'},
+  '2gal':  {w:20,h:20,sqft:.35,label:'2 Gal'},
+  '5gal':  {w:30,h:30,sqft:1,  label:'5 Gal'},
+  '20gal': {w:60,h:60,sqft:4,  label:'20 Gal'}
+};
+const CANVAS_W_CT = 200;
+const CANVAS_H_CT = 600; // matches 20 rows × 30px
+
+let draggingContainer = null;
+let dragOffX=0, dragOffY=0;
+
+function buildContainerZone() {
+  const canvas = document.getElementById('container-canvas');
+  if (!canvas) return;
+  canvas.style.height = CANVAS_H_CT + 'px';
+  canvas.innerHTML = '';
+  // Zone bands
+  const bands = [
+    {top:0, h:Math.round(CANVAS_H_CT*.5), color:'rgba(255,220,50,.08)', label:'Full Sun', lColor:'rgba(255,220,50,.5)'},
+    {top:Math.round(CANVAS_H_CT*.5), h:Math.round(CANVAS_H_CT*.3), color:'rgba(100,210,100,.07)', label:'Part Sun', lColor:'rgba(100,210,100,.5)'},
+    {top:Math.round(CANVAS_H_CT*.8), h:Math.round(CANVAS_H_CT*.2), color:'rgba(100,150,220,.08)', label:'Shade', lColor:'rgba(100,150,220,.5)'}
+  ];
+  bands.forEach(b => {
+    const div = document.createElement('div');
+    div.className = 'zone-band';
+    div.style.cssText = `top:${b.top}px;height:${b.h}px;background:${b.color};color:${b.lColor};`;
+    div.textContent = b.label;
+    canvas.appendChild(div);
+  });
+  // Render containers from state
+  state.containers.forEach(ct => renderContainer(ct));
+  // Mouse events
+  canvas.onmousemove = e => {
+    if (!draggingContainer) return;
+    const rect = canvas.getBoundingClientRect();
+    const sz = CONTAINER_SIZES[draggingContainer.type];
+    const snap = 15;
+    let nx = Math.round((e.clientX - rect.left - dragOffX) / snap) * snap;
+    let ny = Math.round((e.clientY - rect.top - dragOffY) / snap) * snap;
+    nx = Math.max(0, Math.min(CANVAS_W_CT - sz.w, nx));
+    ny = Math.max(0, Math.min(CANVAS_H_CT - sz.h, ny));
+    draggingContainer.x = nx; draggingContainer.y = ny;
+    const el = document.getElementById('ct-'+draggingContainer.id);
+    if (el) { el.style.left=nx+'px'; el.style.top=ny+'px'; }
+  };
+  canvas.onmouseup = () => {
+    if (draggingContainer) { autoSave(); draggingContainer=null; }
+  };
+  canvas.onmouseleave = () => {
+    if (draggingContainer) { autoSave(); draggingContainer=null; }
+  };
+}
+
+function renderContainer(ct) {
+  const canvas = document.getElementById('container-canvas');
+  if (!canvas) return;
+  const old = document.getElementById('ct-'+ct.id);
+  if (old) old.remove();
+  const sz = CONTAINER_SIZES[ct.type];
+  const crop = getCropById(ct.cropId);
+  const bg = crop ? getCropColor(crop) : '#3d444d';
+  const fg = crop ? textColor(bg) : '#9198a1';
+  const el = document.createElement('div');
+  el.id = 'ct-'+ct.id;
+  el.className = 'container-item';
+  el.style.cssText = `left:${ct.x}px;top:${ct.y}px;width:${sz.w}px;height:${sz.h}px;background:${bg};color:${fg};`;
+  el.innerHTML = `<span>${crop?shortName(crop):sz.label}</span>`;
+  el.title = crop ? `${crop.name} — ${crop.variety} (${sz.label})` : `${sz.label} container (click to assign crop)`;
+  // Drag
+  el.onmousedown = e => {
+    e.stopPropagation();
+    const rect = el.getBoundingClientRect();
+    dragOffX = e.clientX - rect.left;
+    dragOffY = e.clientY - rect.top;
+    draggingContainer = ct;
+    el.style.zIndex = 10;
+  };
+  // Click to open detail (if not dragging)
+  el.onclick = e => {
+    if (Math.abs(ct.x-(parseInt(el.style.left))||0)<3) openContainerDetail(ct.id);
+  };
+  // Right-click delete
+  el.oncontextmenu = e => {
+    e.preventDefault();
+    if (confirm(`Remove ${ct.type} container?`)) {
+      state.containers = state.containers.filter(c=>c.id!==ct.id);
+      el.remove();
+      autoSave();
+    }
+  };
+  canvas.appendChild(el);
+}
+
+function openContainerPicker() {
+  document.getElementById('container-picker').classList.add('open');
+}
+function closeContainerPicker() {
+  document.getElementById('container-picker').classList.remove('open');
+}
+
+function addContainer(type) {
+  closeContainerPicker();
+  const sz = CONTAINER_SIZES[type];
+  const id = 'c'+Date.now();
+  const ct = { id, type, x:10, y:10, cropId:null, notes:'' };
+  state.containers.push(ct);
+  renderContainer(ct);
+  autoSave();
+}
+
+function clearAllContainers() {
+  if (!confirm('Remove all containers?')) return;
+  state.containers = [];
+  buildContainerZone();
+  autoSave();
+}
+
+function openContainerDetail(ctId) {
+  // Opens the detail panel for a container — re-use same modal with bed='C'
+  const ct = state.containers.find(c=>c.id===ctId);
+  if (!ct) return;
+  const sz = CONTAINER_SIZES[ct.type];
+  const zone = ct.y < CANVAS_H_CT*.5 ? 'full' : ct.y < CANVAS_H_CT*.8 ? 'part' : 'shade';
+  detailTarget = {bed:'Container', row:0, col:0, key:'ct-'+ctId, zone, ctId};
+
+  document.getElementById('detail-title').textContent = `${sz.label} Container`;
+  document.getElementById('detail-loc').textContent = `${zoneName(zone)} Zone · ${sz.sqft} sq ft`;
+
+  selectedCropId = ct.cropId || null;
+  selectedP2CropId = null;
+  selectedCompanionId = null;
+  const crop = getCropById(selectedCropId);
+  document.getElementById('dp-crop-search').value = crop ? `${crop.name} — ${crop.variety}` : '';
+  document.getElementById('dp-market').checked = false;
+  document.getElementById('dp-p2-enable').checked = false;
+  document.getElementById('dp-phase2-fields').style.display = 'none';
+  document.getElementById('dp-notes').value = ct.notes||'';
+  document.getElementById('dp-crop-dropdown').style.display = 'none';
+  updateDetailCropInfo();
+  document.getElementById('detail-modal').classList.add('open');
+}
+
+// Override saveDetailCell to handle containers
+const _origSave = saveDetailCell;
+// We'll handle containers in saveDetailCell by checking detailTarget.ctId
+const saveDetailCellOrig = saveDetailCell;
+function saveDetailCell() {
+  if (!detailTarget) return;
+  if (detailTarget.ctId) {
+    // Container save
+    const ct = state.containers.find(c=>c.id===detailTarget.ctId);
+    if (ct) {
+      ct.cropId = selectedCropId;
+      ct.notes = document.getElementById('dp-notes').value;
+      renderContainer(ct);
+      autoSave();
+    }
+    closeDetailModal();
+    return;
+  }
+  // Bed cell save
+  const {key} = detailTarget;
+  state.beds[key] = {
+    cropId: selectedCropId,
+    companionId: selectedCompanionId,
+    p2CropId: selectedP2CropId,
+    p1Clear: document.getElementById('dp-p1-clear').value,
+    isMarketCrop: document.getElementById('dp-market').checked,
+    notes: document.getElementById('dp-notes').value,
+    trellisType: selectedCropId && getCropById(selectedCropId)?.isVertical ? document.getElementById('dp-trellis-type').value : null
+  };
+  autoSave();
+  const td = document.querySelector(`.bed-grid td[data-key="${key}"]`);
+  if (td) updateCell(td, key);
+  closeDetailModal();
+}
+
+// ---- AUTO-SUGGEST ENGINE ----
+function buildCropChecklist() {
+  const el = document.getElementById('crop-checklist');
+  if (!el) return;
+  el.innerHTML = '';
+  const cats = {};
+  CROP_LIBRARY.forEach(c => { if (!cats[c.category]) cats[c.category]=[]; cats[c.category].push(c); });
+  CROP_LIBRARY.forEach(crop => {
+    const div = document.createElement('div');
+    div.className = 'crop-check-item';
+    div.dataset.cropId = crop.id;
+    div.dataset.name = `${crop.name} ${crop.variety}`.toLowerCase();
+    const chk = document.createElement('input');
+    chk.type = 'checkbox'; chk.id = 'ck-'+crop.id; chk.checked = crop.inInventory;
+    const dot = document.createElement('div');
+    dot.className = 'crop-check-dot';
+    dot.style.background = getCropColor(crop);
+    const lbl = document.createElement('label');
+    lbl.htmlFor = 'ck-'+crop.id;
+    lbl.innerHTML = `<strong>${crop.name}</strong> <span style="color:var(--text3)">${crop.variety}</span>`;
+    div.append(chk, dot, lbl);
+    el.appendChild(div);
+  });
+}
+
+function filterCropList() {
+  const q = document.getElementById('crop-search-filter').value.toLowerCase();
+  document.querySelectorAll('.crop-check-item').forEach(div => {
+    div.style.display = div.dataset.name.includes(q) ? '' : 'none';
+  });
+}
+function selectAllCrops() { document.querySelectorAll('#crop-checklist input[type=checkbox]').forEach(c=>c.checked=true); }
+function selectNoneCrops() { document.querySelectorAll('#crop-checklist input[type=checkbox]').forEach(c=>c.checked=false); }
+
+let autoSuggestions = [];
+
+function runAutoSuggest() {
+  // Collect selected crops
+  const selected = [];
+  document.querySelectorAll('#crop-checklist input[type=checkbox]:checked').forEach(chk => {
+    const id = chk.id.replace('ck-','');
+    const crop = getCropById(id);
+    if (crop) selected.push(crop);
+  });
+  if (!selected.length) { alert('Select at least one crop.'); return; }
+
+  autoSuggestions = [];
+  const usedCells = new Set();
+
+  // Sort order: sunflowers first (row 1), trellised full sun, full sun, part sun, shade
+  const priority = c => {
+    if (c.category==='flower'&&c.id.includes('sunflower')) return 0;
+    if (c.isVertical&&c.sunReq==='full') return 1;
+    if (c.sunReq==='full') return 2;
+    if (c.sunReq==='part') return 3;
+    return 4;
+  };
+  const sorted = [...selected].sort((a,b)=>priority(a)-priority(b));
+
+  // Rows by sun zone
+  const rowRange = { full:[1,10], part:[11,16], shade:[17,20] };
+
+  // Fennel isolation — only suggest container, not in beds
+  const isolatedIds = new Set();
+  sorted.forEach(c => { if (c.id.includes('fennel')) isolatedIds.add(c.id); });
+
+  // Group companions: build companion pair sets
+  const companionPairs = [];
+  sorted.forEach(crop => {
+    const comps = (crop.companions||[]);
+    const partner = sorted.find(c=>c.id!==crop.id && comps.some(name=>c.id.includes(name)||c.category===name));
+    if (partner && !companionPairs.some(p=>p[0].id===partner.id||p[1].id===partner.id)) {
+      companionPairs.push([crop,partner]);
+    }
+  });
+
+  // Place crops into beds
+  ['A','B'].forEach(bed => {
+    sorted.forEach(crop => {
+      if (isolatedIds.has(crop.id)) return;
+      const zone = crop.sunReq in rowRange ? crop.sunReq : 'shade';
+      const [rMin,rMax] = rowRange[zone];
+      // Trellised: row 1-3 only
+      const minRow = (crop.isVertical&&zone==='full') ? 1 : rMin;
+      const maxRow = (crop.isVertical&&zone==='full') ? 3 : rMax;
+      // Find empty cell
+      for (let row=minRow; row<=maxRow; row++) {
+        for (let col=1; col<=4; col++) {
+          // Marigolds at col 1 or 4 (borders)
+          if (crop.category==='flower'&&crop.id.includes('marigold')&&col!==1&&col!==4) continue;
+          const key = cellKey(bed,row,col);
+          if (usedCells.has(key) || (state.beds[key]&&state.beds[key].cropId)) continue;
+          // Companion: check adjacent for partner
+          let companionId = null;
+          const pair = companionPairs.find(p=>p[0].id===crop.id||p[1].id===crop.id);
+          if (pair) {
+            const partner = pair[0].id===crop.id?pair[1]:pair[0];
+            // Place partner in adjacent cell next column if available
+            const adjCol = col<4?col+1:col-1;
+            const adjKey = cellKey(bed,row,adjCol);
+            if (!usedCells.has(adjKey)&&!(state.beds[adjKey]&&state.beds[adjKey].cropId)) {
+              companionId = partner.id;
+              autoSuggestions.push({key:adjKey, bed, row, col:adjCol, cropId:partner.id, companionId:crop.id, isCompanionOf:key});
+              usedCells.add(adjKey);
+            }
+          }
+          // Brassica grouping: keep same bed/adjacent rows
+          // Bean/pea away from alliums
+          if ((crop.category==='bean'||crop.category==='pea')) {
+            const cellData = state.beds[key];
+            if (cellData&&cellData.cropId) {
+              const existing = getCropById(cellData.cropId);
+              if (existing&&existing.category==='allium') continue;
+            }
+          }
+          usedCells.add(key);
+          // Succession: if spring crop clears before Aug, suggest fall crop
+          let p2CropId = null;
+          if (crop.successionInterval>0 || (crop.harvestWindow&&crop.harvestWindow.includes('May'))) {
+            const fallOpts = sorted.filter(c=>c.id!==crop.id&&(c.category==='brassica'||c.category==='greens'||c.category==='root')&&c.startMethod!=='greenhouse');
+            if (fallOpts.length) p2CropId = fallOpts[0].id;
+          }
+          autoSuggestions.push({key, bed, row, col, cropId:crop.id, companionId, p2CropId});
+          // Only place crop once per bed
+          return;
+        }
+        return;
+      }
+    });
+  });
+
+  // Display results
+  const resultEl = document.getElementById('suggest-result');
+  const listEl = document.getElementById('suggest-list');
+  const summaryEl = document.getElementById('suggest-summary');
+  resultEl.style.display = '';
+  document.getElementById('accept-all-btn').style.display = '';
+  document.getElementById('reject-all-btn').style.display = '';
+  summaryEl.textContent = `${autoSuggestions.length} placements suggested across both beds.`;
+  listEl.innerHTML = '';
+  autoSuggestions.forEach((sug,i) => {
+    const crop = getCropById(sug.cropId);
+    if (!crop) return;
+    const bg = getCropColor(crop);
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:5px;border:1px solid var(--border);font-size:.8rem;';
+    row.id = 'sug-'+i;
+    row.innerHTML = `
+      <div style="width:10px;height:10px;border-radius:50%;background:${bg};flex-shrink:0;"></div>
+      <span style="flex:1;"><strong>${crop.name}</strong> ${crop.variety} → Bed ${sug.bed} R${sug.row}C${'ABCD'[sug.col-1]}</span>
+      <button class="btn btn-green btn-sm" onclick="acceptSuggestion(${i})">✓</button>
+      <button class="btn btn-ghost btn-sm" onclick="rejectSuggestion(${i})">✕</button>`;
+    listEl.appendChild(row);
+  });
+
+  // Highlight cells
+  refreshAllCells();
+  autoSuggestions.forEach(sug => {
+    const td = document.querySelector(`.bed-grid td[data-key="${sug.key}"]`);
+    if (td) td.style.outline = '2px solid rgba(245,217,138,.7)';
+  });
+}
+
+function acceptSuggestion(i) {
+  const sug = autoSuggestions[i];
+  if (!sug) return;
+  state.beds[sug.key] = { cropId:sug.cropId, companionId:sug.companionId, p2CropId:sug.p2CropId, isMarketCrop:false, notes:'' };
+  autoSave();
+  const td = document.querySelector(`.bed-grid td[data-key="${sug.key}"]`);
+  if (td) { td.style.outline=''; updateCell(td,sug.key); }
+  document.getElementById('sug-'+i)?.remove();
+  autoSuggestions[i] = null;
+}
+function rejectSuggestion(i) {
+  const sug = autoSuggestions[i];
+  if (!sug) return;
+  const td = document.querySelector(`.bed-grid td[data-key="${sug.key}"]`);
+  if (td) td.style.outline = '';
+  document.getElementById('sug-'+i)?.remove();
+  autoSuggestions[i] = null;
+}
+function acceptAllSuggestions() {
+  autoSuggestions.forEach((_,i)=>acceptSuggestion(i));
+  document.getElementById('accept-all-btn').style.display='none';
+  document.getElementById('reject-all-btn').style.display='none';
+}
+function rejectAllSuggestions() {
+  autoSuggestions.forEach((_,i)=>{ if(autoSuggestions[i]) rejectSuggestion(i); });
+  document.getElementById('suggest-result').style.display='none';
+  document.getElementById('accept-all-btn').style.display='none';
+  document.getElementById('reject-all-btn').style.display='none';
+}
+
+// ---- BED VIEW SWITCHER ----
+function setBedView(view) {
+  document.querySelectorAll('.sub-view-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&view==='manual')||(i===1&&view==='auto')));
+  document.getElementById('bed-manual-view').style.display = view==='manual'?'':'none';
+  document.getElementById('bed-auto-view').style.display = view==='auto'?'':'none';
+  if (view==='auto') buildCropChecklist();
+}
+
+// ---- INIT BED PLANNER ----
+function initBedPlanner() {
+  buildBedGrids();
+  buildContainerZone();
+}
+
+// =====================================================
+// TAB 3: GREENHOUSE PLANNER
+// =====================================================
+
+// Floor plan: 20ft x 10ft, canvas 400x200px (20px per ft)
+const GH_SCALE = 20; // px per foot
+const GH_W = 400, GH_H = 200;
+
+function renderGhFloor() {
+  const canvas = document.getElementById('gh-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,GH_W,GH_H);
+  // Background
+  ctx.fillStyle = '#1a2535';
+  ctx.fillRect(0,0,GH_W,GH_H);
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,.08)';
+  ctx.lineWidth = 1;
+  for (let x=0; x<=GH_W; x+=GH_SCALE) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,GH_H); ctx.stroke(); }
+  for (let y=0; y<=GH_H; y+=GH_SCALE) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(GH_W,y); ctx.stroke(); }
+  // Border
+  ctx.strokeStyle = 'rgba(245,217,138,.4)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(1,1,GH_W-2,GH_H-2);
+  // Labels
+  ctx.fillStyle = 'rgba(245,217,138,.4)';
+  ctx.font = '9px DM Sans,sans-serif';
+  ctx.fillText('N (back)', 4, 10);
+  ctx.fillText('S (door)', 4, GH_H-4);
+  ctx.fillText('20 ft', GH_W/2-12, 10);
+  ctx.fillText('10 ft', 2, GH_H/2);
+}
+
+let ghDragging = null; let ghDragOX=0, ghDragOY=0;
+
+function renderGhItems() {
+  const layer = document.getElementById('gh-items-layer');
+  if (!layer) return;
+  layer.innerHTML = '';
+  layer.style.pointerEvents = 'auto';
+  (state.greenhouseItems||[]).forEach((item,i) => {
+    const div = document.createElement('div');
+    div.className = 'gh-item';
+    div.style.left = item.x+'px'; div.style.top = item.y+'px';
+    div.style.width = item.w+'px'; div.style.height = item.h+'px';
+    const typeLabel = item.type==='flat'?'Seed Flat\n(1020)':item.type==='staging'?'Pot\nStaging':'Prop\nZone';
+    div.innerHTML = `<span style="font-size:.58rem;line-height:1.3;padding:2px;pointer-events:none">${typeLabel}</span>`;
+    div.title = typeLabel.replace('\n',' ');
+    div.addEventListener('mousedown', e => {
+      if (e.button===2) { e.preventDefault(); state.greenhouseItems.splice(i,1); saveState(); renderGhItems(); return; }
+      ghDragging = i;
+      const rect2 = layer.getBoundingClientRect();
+      ghDragOX = e.clientX - rect2.left - item.x;
+      ghDragOY = e.clientY - rect2.top - item.y;
+      e.preventDefault();
+    });
+    div.addEventListener('contextmenu', e => { e.preventDefault(); });
+    layer.appendChild(div);
+  });
+  layer.onmousemove = e => {
+    if (ghDragging===null) return;
+    const rect = layer.getBoundingClientRect();
+    const item = state.greenhouseItems[ghDragging];
+    if (!item) return;
+    let x = e.clientX - rect.left - ghDragOX;
+    let y = e.clientY - rect.top - ghDragOY;
+    x = Math.max(0, Math.min(GH_W - item.w, Math.round(x/GH_SCALE)*GH_SCALE));
+    y = Math.max(0, Math.min(GH_H - item.h, Math.round(y/GH_SCALE)*GH_SCALE));
+    item.x = x; item.y = y;
+    renderGhItems();
+  };
+  layer.onmouseup = () => { if (ghDragging!==null) { ghDragging=null; saveState(); } };
+  layer.onmouseleave = () => { if (ghDragging!==null) { ghDragging=null; saveState(); } };
+}
+
+function addGhItem(type) {
+  if (!state.greenhouseItems) state.greenhouseItems = [];
+  const sizes = { flat:{w:40,h:20}, staging:{w:40,h:40}, propzone:{w:80,h:60} };
+  const sz = sizes[type]||{w:40,h:40};
+  state.greenhouseItems.push({ type, x:20, y:20, w:sz.w, h:sz.h });
+  saveState();
+  renderGhItems();
+}
+
+function clearGhFloor() {
+  state.greenhouseItems = [];
+  saveState();
+  renderGhItems();
+}
+
+// Parse date string like "March 5" → JS Date relative to current year
+function parseDateStr(s) {
+  if (!s) return null;
+  try { return new Date(s+', 2025'); } catch(e) { return null; }
+}
+
+function addWeeks(d, w) {
+  if (!d) return null;
+  const r = new Date(d);
+  r.setDate(r.getDate() + w*7);
+  return r;
+}
+
+function subWeeks(d, w) {
+  if (!d) return null;
+  const r = new Date(d);
+  r.setDate(r.getDate() - w*7);
+  return r;
+}
+
+function fmtDateShort(d) {
+  if (!d) return '—';
+  return d.toLocaleDateString('en-US', {month:'short', day:'numeric'});
+}
+
+function buildPropTracker() {
+  const tbody = document.getElementById('prop-tracker-body');
+  if (!tbody) return;
+
+  // Collect all crops placed in beds or containers with startMethod greenhouse or either
+  const entries = []; // {crop, squares, transplantDateStr}
+  const seen = {}; // cropId → {squares:[],transplantDate}
+
+  const lastFrost = state.lastFrost || 'May 1';
+
+  Object.entries(state.beds||{}).forEach(([key,data]) => {
+    if (!data.cropId) return;
+    const crop = getCropById(data.cropId);
+    if (!crop) return;
+    if (crop.startMethod==='direct') return; // skip direct sow
+    // Parse transplant date: weeksBeforeLastFrost before lastFrost
+    let transplantDate = null;
+    try {
+      const lf = new Date(lastFrost+', 2025');
+      transplantDate = subWeeks(lf, crop.weeksBeforeLastFrost||0);
+      // For non-frost-sensitive crops, transplant might be earlier
+    } catch(e) {}
+    const k = crop.id;
+    if (!seen[k]) seen[k] = { crop, squares:[], transplantDate };
+    seen[k].squares.push(key);
+    // Use earliest transplant date
+    if (transplantDate && (!seen[k].transplantDate || transplantDate < seen[k].transplantDate))
+      seen[k].transplantDate = transplantDate;
+  });
+  // Also check containers
+  (state.containers||[]).forEach(ct => {
+    if (!ct.cropId) return;
+    const crop = getCropById(ct.cropId);
+    if (!crop) return;
+    if (crop.startMethod==='direct') return;
+    let transplantDate = null;
+    try {
+      const lf = new Date(lastFrost+', 2025');
+      transplantDate = subWeeks(lf, crop.weeksBeforeLastFrost||0);
+    } catch(e) {}
+    const k = crop.id;
+    if (!seen[k]) seen[k] = { crop, squares:[], transplantDate };
+    seen[k].squares.push('Container');
+    if (transplantDate && (!seen[k].transplantDate || transplantDate < seen[k].transplantDate))
+      seen[k].transplantDate = transplantDate;
+  });
+
+  const rows = Object.values(seen);
+
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:20px;font-size:.82rem;">Add greenhouse-start crops to Bed Planner to see propagation schedule</td></tr>';
+    buildGhCapacityBar(rows);
+    return;
+  }
+
+  // Sort by transplant date
+  rows.sort((a,b) => (a.transplantDate||new Date('2025-12-31')) - (b.transplantDate||new Date('2025-12-31')));
+
+  tbody.innerHTML = rows.map((entry, idx) => {
+    const {crop, squares, transplantDate} = entry;
+    const wks = crop.weeksBeforeLastFrost || 6;
+    const ghStartDate = transplantDate ? subWeeks(transplantDate, wks) : null; // start earlier
+    // Actually GH start = transplant - greenhouse weeks (weeksBeforeLastFrost tells us total from last frost)
+    // Real GH start = lastFrost - weeksBeforeLastFrost weeks = transplantDate already
+    // GH duration is weeksBeforeLastFrost
+    const actualGhStart = transplantDate ? subWeeks(transplantDate, 0) : null;
+    // Actually: weeksBeforeLastFrost = weeks in GH. GH start = lastFrost - weeksBeforeLastFrost weeks
+    // transplantDate was already calculated as lastFrost - weeksBeforeLastFrost
+    // So GH start = transplantDate (when to start in GH), transplant out = lastFrost (approx)
+    const ghStart = transplantDate; // start seeds in GH on this date
+    const transplantOut = transplantDate ? addWeeks(transplantDate, wks) : null; // transplant out after wks weeks
+    // Fix: ghStart = lastFrost - wks weeks, transplantOut = lastFrost
+    const lf = new Date((state.lastFrost||'May 1')+', 2025');
+    const realGhStart = subWeeks(lf, wks);
+    const realTransplant = lf;
+
+    const cells = squares.length * (crop.sfgCount||1);
+    const flats = Math.ceil(cells / 72);
+
+    // Stored status
+    const statusKey = 'gh-status-'+crop.id;
+    const currentStatus = state.propagationData?.[statusKey] || 'not-started';
+
+    const statusOpts = ['not-started','germinating','seedling','ready','transplanted'];
+    const statusLabels = {'not-started':'Not Started','germinating':'Germinating','seedling':'Seedling','ready':'Ready','transplanted':'Transplanted'};
+    const statusClasses = {'not-started':'ps-not-started','germinating':'ps-germinating','seedling':'ps-seedling','ready':'ps-ready','transplanted':'ps-transplanted'};
+
+    const destList = [...new Set(squares)].slice(0,3).join(', ') + (squares.length>3?'…':'');
+
+    return `<tr>
+      <td><strong>${crop.name}</strong><br><span style="color:var(--text3);font-size:.72rem">${crop.variety}</span></td>
+      <td>${fmtDateShort(realGhStart)}</td>
+      <td style="text-align:center">${wks}</td>
+      <td style="text-align:center">${cells}</td>
+      <td style="text-align:center">${flats}</td>
+      <td>${fmtDateShort(realTransplant)}</td>
+      <td>
+        <select onchange="setPropStatus('${crop.id}',this.value)">
+          ${statusOpts.map(s=>`<option value="${s}"${s===currentStatus?' selected':''}>${statusLabels[s]}</option>`).join('')}
+        </select>
+      </td>
+      <td style="color:var(--text3);font-size:.72rem">${destList}</td>
+    </tr>`;
+  }).join('');
+
+  buildGhCapacityBar(rows);
+}
+
+function setPropStatus(cropId, status) {
+  if (!state.propagationData) state.propagationData = {};
+  state.propagationData['gh-status-'+cropId] = status;
+  saveState();
+}
+
+function buildGhCapacityBar(rows) {
+  const bar = document.getElementById('gh-capacity-bar');
+  if (!bar) return;
+  const totalCells = rows.reduce((sum, e) => sum + e.squares.length * (e.crop.sfgCount||1), 0);
+  const totalFlats = Math.ceil(totalCells / 72);
+  const capacity = 40; // spec: ~40 flats for 20x10ft GH
+  const pct = Math.round(totalFlats/capacity*100);
+  const over = totalFlats > capacity;
+  bar.innerHTML = `
+    <div class="gh-cap-item"><div class="gh-cap-num">${totalCells}</div><div class="gh-cap-label">Cells Needed</div></div>
+    <div class="gh-cap-item"><div class="gh-cap-num ${over?'warn':''}">${totalFlats}</div><div class="gh-cap-label">Flats Needed</div></div>
+    <div class="gh-cap-item"><div class="gh-cap-num">${capacity}</div><div class="gh-cap-label">GH Capacity (est.)</div></div>
+    <div class="gh-cap-item"><div class="gh-cap-num ${over?'warn':''}">${pct}%</div><div class="gh-cap-label">Capacity Used</div></div>
+    ${over ? `<div style="color:var(--red);font-size:.78rem;align-self:center">⚠ Over capacity — consider batching starts or adding a second structure.</div>` : ''}
+  `;
+}
+
+function initGreenhousePlanner() {
+  if (!state.greenhouseItems) state.greenhouseItems = [];
+  if (!state.propagationData) state.propagationData = {};
+  renderGhFloor();
+  renderGhItems();
+  buildPropTracker();
+  // Wire canvas click to place item
+  const canvas = document.getElementById('gh-canvas');
+  if (canvas && !canvas._ghWired) {
+    canvas._ghWired = true;
+    canvas.addEventListener('click', e => {
+      const rect = canvas.getBoundingClientRect();
+      const x = Math.round((e.clientX-rect.left)/GH_SCALE)*GH_SCALE;
+      const y = Math.round((e.clientY-rect.top)/GH_SCALE)*GH_SCALE;
+      if (!state.greenhouseItems) state.greenhouseItems = [];
+      state.greenhouseItems.push({ type:'flat', x:Math.min(x,GH_W-40), y:Math.min(y,GH_H-20), w:40, h:20 });
+      saveState();
+      renderGhItems();
+    });
+  }
+}
+
+// =====================================================
+// TAB 4: PLANTING CALENDAR
+// =====================================================
+
+// Pre-loaded Cave Junction schedule, aligned to last frost May 1 / first frost Nov 15
+const CALENDAR_SCHEDULE = {
+  january: {
+    name:'January', num:1,
+    greenhouse:[
+      {text:'Onions (Start 12 wks before April transplant)', cat:'allium'},
+      {text:'Leeks (12 wks before April transplant)', cat:'allium'},
+    ],
+    directSow:[],
+    transplant:[]
+  },
+  february: {
+    name:'February', num:2,
+    greenhouse:[
+      {text:'Peppers & Hot Peppers (10–12 wks before May 1)', cat:'pepper'},
+      {text:'Eggplant (10 wks before May 1)', cat:'other'},
+      {text:'Early Tomatoes — Manitoba, New Yorker (start Feb 5)', cat:'tomato'},
+    ],
+    directSow:[],
+    transplant:[]
+  },
+  march: {
+    name:'March', num:3,
+    greenhouse:[
+      {text:'All remaining tomatoes (8 wks before May 1 = Mar 5)', cat:'tomato'},
+      {text:'Basil (8 wks before May 1)', cat:'herb'},
+      {text:'Parsley (8 wks before May 1)', cat:'herb'},
+      {text:'Tomatillos (8 wks)', cat:'other'},
+    ],
+    directSow:[
+      {text:'Peas — as soon as soil workable (~Mar 1)', cat:'legume'},
+      {text:'Spinach, Arugula, Lettuce (Mar 15+, soil ≥ 40°F)', cat:'greens'},
+      {text:'Kale, Chard (Mar 15+)', cat:'brassica'},
+      {text:'Beets, Carrots, Radishes (Mar 15+)', cat:'root'},
+      {text:'Upland Cress', cat:'greens'},
+    ],
+    transplant:[
+      {text:'Onions (if started Jan)', cat:'allium'},
+      {text:'Brassicas started in February', cat:'brassica'},
+    ]
+  },
+  april: {
+    name:'April', num:4,
+    greenhouse:[
+      {text:'Harden off tomato & pepper starts', cat:'tomato'},
+      {text:'Marigolds (4 wks before May 1)', cat:'flower'},
+      {text:'Cucumbers (3 wks before May 1)', cat:'cucumber'},
+    ],
+    directSow:[
+      {text:'Succession lettuce, radishes', cat:'greens'},
+      {text:'Beets, carrots (succession)', cat:'root'},
+      {text:'Turnips', cat:'root'},
+      {text:'Final round peas', cat:'legume'},
+    ],
+    transplant:[
+      {text:'Onions, leeks', cat:'allium'},
+      {text:'Broccoli, kale, chard (if frost risk low)', cat:'brassica'},
+    ]
+  },
+  may: {
+    name:'May (after May 1 — last frost)', num:5,
+    greenhouse:[
+      {text:'Start fall broccoli/cauliflower (if wanted Oct harvest)', cat:'brassica'},
+    ],
+    directSow:[
+      {text:'Beans (Bush & Pole)', cat:'legume'},
+      {text:'Zucchini, Squash, Cucumbers, Melons', cat:'squash'},
+      {text:'Sunflowers, Morning Glory, Marigolds', cat:'flower'},
+    ],
+    transplant:[
+      {text:'ALL warm season: Tomatoes, Peppers, Tomatillos', cat:'tomato'},
+      {text:'Cucumbers, Squash, Melons, Basil', cat:'herb'},
+      {text:'Marigolds (bed borders)', cat:'flower'},
+    ]
+  },
+  june: {
+    name:'June', num:6,
+    greenhouse:[
+      {text:'Start fall brassica transplants (10 wks before Sep 1 = Jun 20)', cat:'brassica'},
+    ],
+    directSow:[
+      {text:'Beans succession #1', cat:'legume'},
+      {text:'Cucumbers succession', cat:'cucumber'},
+      {text:'More zucchini', cat:'squash'},
+      {text:'Shade zone: Succession lettuce, spinach', cat:'greens'},
+    ],
+    transplant:[]
+  },
+  july: {
+    name:'July', num:7,
+    greenhouse:[
+      {text:'Fall brassicas if not started (kale, collards, pak choi)', cat:'brassica'},
+    ],
+    directSow:[
+      {text:'Beans succession #2', cat:'legume'},
+      {text:'Carrots, beets for fall harvest', cat:'root'},
+      {text:'Spinach for fall harvest', cat:'greens'},
+    ],
+    transplant:[]
+  },
+  august: {
+    name:'August', num:8,
+    greenhouse:[],
+    directSow:[
+      {text:'Spinach, arugula, lettuce for fall', cat:'greens'},
+      {text:'Radishes (fast)', cat:'root'},
+    ],
+    transplant:[
+      {text:'Fall brassicas out (broccoli, kale, cabbage)', cat:'brassica'},
+      {text:'Clear spent spring crops — plant Phase 2 succession', cat:'other'},
+    ]
+  },
+  september: {
+    name:'September', num:9,
+    greenhouse:[],
+    directSow:[
+      {text:'Spinach, arugula for overwintering under cover', cat:'greens'},
+    ],
+    transplant:[
+      {text:'Last brassica transplants if any', cat:'brassica'},
+    ]
+  },
+  october: {
+    name:'October', num:10,
+    greenhouse:[],
+    directSow:[
+      {text:'Garlic (plant Oct 1–15 for spring harvest)', cat:'allium'},
+    ],
+    transplant:[
+      {text:'Clear warm season after first frost (Nov 15)', cat:'other'},
+      {text:'Mulch beds for winter', cat:'other'},
+    ]
+  },
+  november: {
+    name:'November', num:11,
+    greenhouse:[],
+    directSow:[],
+    transplant:[
+      {text:'Season end. Export data & plan for next year.', cat:'other'},
+    ]
+  },
+  december: {
+    name:'December', num:12,
+    greenhouse:[
+      {text:'Review seed inventory, order for next season', cat:'other'},
+    ],
+    directSow:[],
+    transplant:[]
+  }
+};
+
+const CAT_COLORS = {
+  tomato:'#c0392b', pepper:'#e67e22', brassica:'#27ae60', greens:'#2ecc71',
+  legume:'#8e44ad', root:'#d35400', allium:'#7f8c8d', herb:'#16a085',
+  squash:'#f39c12', cucumber:'#1abc9c', flower:'#e91e63', other:'#95a5a6',
+  fruit:'#e74c3c'
+};
+
+function placedCropsSet() {
+  // Returns a Set of crop IDs placed in beds/containers
+  const placed = new Set();
+  Object.values(state.beds||{}).forEach(d => { if (d.cropId) placed.add(d.cropId); });
+  (state.containers||[]).forEach(c => { if (c.cropId) placed.add(c.cropId); });
+  return placed;
+}
+
+function buildCalendar() {
+  const layout = document.getElementById('cal-layout');
+  if (!layout) return;
+  const placed = placedCropsSet();
+
+  layout.innerHTML = Object.values(CALENDAR_SCHEDULE).map((month, i) => {
+    const totalEntries = month.greenhouse.length + month.directSow.length + month.transplant.length;
+    const collapsed = i > 2; // March and earlier expanded by default, rest collapsed
+    return `<div class="cal-month${collapsed?' collapsed':''}" id="cal-month-${month.num}">
+      <div class="cal-month-header" onclick="toggleCalMonth(${month.num})">
+        <span class="cal-month-name">${month.name}</span>
+        <span class="cal-month-count">${totalEntries} task${totalEntries!==1?'s':''}</span>
+        <span class="cal-collapse-icon">▾</span>
+      </div>
+      <div class="cal-month-body">
+        <div>
+          <div class="cal-sec-title">🌱 Start in Greenhouse</div>
+          ${month.greenhouse.length ? month.greenhouse.map(e => calEntry(e, placed)).join('') : '<div class="cal-empty">None this month</div>'}
+        </div>
+        <div>
+          <div class="cal-sec-title">🌿 Direct Sow Outdoors</div>
+          ${month.directSow.length ? month.directSow.map(e => calEntry(e, placed)).join('') : '<div class="cal-empty">None this month</div>'}
+        </div>
+        <div>
+          <div class="cal-sec-title">🪴 Transplant Out</div>
+          ${month.transplant.length ? month.transplant.map(e => calEntry(e, placed)).join('') : '<div class="cal-empty">None this month</div>'}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function calEntry(entry, placed) {
+  // Check if related crop is placed
+  const color = CAT_COLORS[entry.cat] || '#888';
+  return `<div class="cal-entry">
+    <div class="cal-entry-dot" style="background:${color}"></div>
+    <div class="cal-entry-text">${entry.text}</div>
+  </div>`;
+}
+
+function toggleCalMonth(num) {
+  const el = document.getElementById('cal-month-'+num);
+  if (el) el.classList.toggle('collapsed');
+}
+
+function collapseAllMonths() {
+  document.querySelectorAll('.cal-month').forEach(m => m.classList.add('collapsed'));
+}
+
+function expandAllMonths() {
+  document.querySelectorAll('.cal-month').forEach(m => m.classList.remove('collapsed'));
+}
+
+function initCalendar() {
+  buildCalendar();
+}
+
+// =====================================================
+// TAB 5: MARKET PLANNER
+// =====================================================
+
+if (!state.marketDays) state.marketDays = ['Sat'];
+
+function toggleMarketDay(day, btn) {
+  if (!state.marketDays) state.marketDays = [];
+  const idx = state.marketDays.indexOf(day);
+  if (idx >= 0) state.marketDays.splice(idx, 1);
+  else state.marketDays.push(day);
+  saveState();
+  document.querySelectorAll('.mkt-day-btn').forEach(b => {
+    b.classList.toggle('active', state.marketDays.includes(b.dataset.day));
+  });
+  buildMarketCalendar();
+}
+
+function getMarketCrops() {
+  // Returns array of {cropId, location, squares}
+  const list = [];
+  Object.entries(state.beds||{}).forEach(([key, data]) => {
+    if (data.cropId && data.isMarketCrop) {
+      const crop = getCropById(data.cropId);
+      if (crop) list.push({ crop, location: key, squares: 1 });
+    }
+  });
+  (state.containers||[]).forEach(ct => {
+    if (ct.cropId && ct.isMarketCrop) {
+      const crop = getCropById(ct.cropId);
+      if (crop) list.push({ crop, location: 'Container', squares: 1 });
+    }
+  });
+  return list;
+}
+
+// Group by crop
+function getMarketCropGroups() {
+  const items = getMarketCrops();
+  const groups = {};
+  items.forEach(item => {
+    const k = item.crop.id;
+    if (!groups[k]) groups[k] = { crop:item.crop, locations:[], count:0 };
+    groups[k].locations.push(item.location);
+    groups[k].count++;
+  });
+  return Object.values(groups);
+}
+
+function yieldEstimate(crop) {
+  const ypp = crop.yieldPerPlant || '';
+  if (ypp) return ypp;
+  const cat = crop.category;
+  const ests = { tomato:'10-15 lbs', pepper:'20-30 fruits', squash:'6-10 lbs', cucumber:'10-20 fruits',
+    legume:'0.5 lb', greens:'2 lbs/mo', brassica:'1-2 lbs', root:'varies', allium:'0.25 lb',
+    herb:'0.25 lb/yr', fruit:'1-2 fruits' };
+  return ests[cat] || '—';
+}
+
+function buildMarketYieldTable() {
+  const tbody = document.getElementById('mkt-yield-body');
+  if (!tbody) return;
+  const groups = getMarketCropGroups();
+
+  if (!groups.length) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:20px;font-size:.82rem">Mark crops as "Market crop" in the Bed Planner to see them here</td></tr>';
+    buildMarketStats([]);
+    return;
+  }
+
+  tbody.innerHTML = groups.map(g => {
+    const {crop, locations, count} = g;
+    const ypp = yieldEstimate(crop);
+    const hw = crop.harvestWindow || '—';
+    const hwParts = hw.split('-');
+    const hStart = hwParts[0]||'—', hEnd = hwParts[1]||hwParts[0]||'—';
+    const locStr = [...new Set(locations)].slice(0,3).join(', ')+(locations.length>3?'…':'');
+    const statusKey = 'mkt-ready-'+crop.id;
+    const isReady = state.propagationData?.[statusKey] || false;
+    return `<tr>
+      <td><strong>${crop.name}</strong><br><span style="color:var(--text3);font-size:.72rem">${crop.variety}</span></td>
+      <td style="font-size:.74rem;color:var(--text3)">${locStr}</td>
+      <td style="text-align:center">${count}</td>
+      <td style="font-size:.8rem">${ypp}</td>
+      <td style="font-size:.8rem;color:var(--gold)">${count} × ${ypp}</td>
+      <td>${hStart}</td>
+      <td>${hEnd}</td>
+      <td style="text-align:center"><input type="checkbox" ${isReady?'checked':''} onchange="setMarketReady('${crop.id}',this.checked)" style="width:16px;height:16px;cursor:pointer"></td>
+    </tr>`;
+  }).join('');
+
+  buildMarketStats(groups);
+}
+
+function setMarketReady(cropId, val) {
+  if (!state.propagationData) state.propagationData = {};
+  state.propagationData['mkt-ready-'+cropId] = val;
+  saveState();
+}
+
+function buildMarketStats(groups) {
+  const statsEl = document.getElementById('mkt-stats');
+  if (!statsEl) return;
+  const total = groups.length;
+  const ready = groups.filter(g => state.propagationData?.['mkt-ready-'+g.crop.id]).length;
+  const harvestMonths = new Set();
+  groups.forEach(g => {
+    const hw = g.crop.harvestWindow||'';
+    hw.split('-').forEach(m => harvestMonths.add(m.trim()));
+  });
+  statsEl.innerHTML = `
+    <div class="mkt-stat-card"><div class="mkt-stat-num">${total}</div><div class="mkt-stat-label">Market Crops</div></div>
+    <div class="mkt-stat-card"><div class="mkt-stat-num">${ready}</div><div class="mkt-stat-label">Ready ✓</div></div>
+    <div class="mkt-stat-card"><div class="mkt-stat-num">${harvestMonths.size}</div><div class="mkt-stat-label">Harvest Months</div></div>
+  `;
+}
+
+function buildMarketCalendar() {
+  const grid = document.getElementById('mkt-calendar-grid');
+  if (!grid) return;
+  const groups = getMarketCropGroups();
+
+  // Generate weeks May through November
+  const weeks = [];
+  const start = new Date('2025-05-01');
+  const end = new Date('2025-11-15');
+  let cur = new Date(start);
+  while (cur <= end) {
+    weeks.push(new Date(cur));
+    cur.setDate(cur.getDate()+7);
+  }
+
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  grid.innerHTML = weeks.map(wk => {
+    const wkLabel = `${MONTHS[wk.getMonth()]} ${wk.getDate()}`;
+    const wkEnd = new Date(wk); wkEnd.setDate(wkEnd.getDate()+6);
+    const wkEndLabel = `${MONTHS[wkEnd.getMonth()]} ${wkEnd.getDate()}`;
+
+    // Find crops harvesting this week
+    const available = groups.filter(g => {
+      const hw = g.crop.harvestWindow||'';
+      const parts = hw.split('-');
+      if (parts.length < 2) return false;
+      const hStart = new Date(parts[0].trim()+' 1, 2025');
+      const hEnd = new Date(parts[1].trim()+' 28, 2025');
+      return wk >= hStart && wk <= hEnd;
+    });
+
+    return `<div class="mkt-week-card">
+      <div class="mkt-week-title">${wkLabel} – ${wkEndLabel}</div>
+      ${available.length
+        ? available.map(g=>`<div class="mkt-week-item">🌿 ${g.crop.name} ${g.crop.variety}</div>`).join('')
+        : '<div class="mkt-week-empty">No harvest expected</div>'}
+    </div>`;
+  }).join('');
+}
+
+function buildGapsAnalysis() {
+  const el = document.getElementById('mkt-gaps');
+  if (!el) return;
+  const groups = getMarketCropGroups();
+
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const weeks = [];
+  const start = new Date('2025-05-01');
+  const end = new Date('2025-11-15');
+  let cur = new Date(start);
+  while (cur <= end) {
+    weeks.push(new Date(cur));
+    cur.setDate(cur.getDate()+7);
+  }
+
+  const gapWeeks = weeks.filter(wk => {
+    return !groups.some(g => {
+      const hw = g.crop.harvestWindow||'';
+      const parts = hw.split('-');
+      if (parts.length < 2) return false;
+      const hStart = new Date(parts[0].trim()+' 1, 2025');
+      const hEnd = new Date(parts[1].trim()+' 28, 2025');
+      return wk >= hStart && wk <= hEnd;
+    });
+  });
+
+  if (!groups.length) {
+    el.innerHTML = '<div style="color:var(--text3);font-size:.82rem">Mark crops as market crops in Bed Planner to see gap analysis.</div>';
+    return;
+  }
+
+  if (!gapWeeks.length) {
+    el.innerHTML = '<div style="color:var(--green);font-size:.82rem">✓ No gaps — you have market produce every week May through November!</div>';
+    return;
+  }
+
+  // Suggest crops that could fill gaps
+  const suggestions = {
+    'May':'Lettuce, Radishes, Peas, Kale',
+    'Jun':'Zucchini, Lettuce, Peas, Beets',
+    'Jul':'Tomatoes, Cucumbers, Beans, Squash, Basil',
+    'Aug':'Tomatoes, Peppers, Cucumbers, Beans, Corn, Melons',
+    'Sep':'Tomatoes, Peppers, Winter Squash, Kale, Chard',
+    'Oct':'Kale, Chard, Beets, Carrots, Winter Squash',
+    'Nov':'Kale, Chard, Root Vegetables'
+  };
+
+  el.innerHTML = gapWeeks.slice(0,8).map(wk => {
+    const wkLabel = `${MONTHS[wk.getMonth()]} ${wk.getDate()}`;
+    const monthKey = MONTHS[wk.getMonth()];
+    const suggest = suggestions[monthKey] || 'Consider succession planting';
+    return `<div class="mkt-gap-item">
+      <span class="mkt-gap-wk">⚠ Wk of ${wkLabel}</span>
+      <span>Gap detected — suggest: <em>${suggest}</em></span>
+    </div>`;
+  }).join('') + (gapWeeks.length>8?`<div style="color:var(--text3);font-size:.78rem;padding:4px">...and ${gapWeeks.length-8} more gap weeks</div>`:'');
+}
+
+function buildMarketTab() {
+  // Sync market day buttons
+  document.querySelectorAll('.mkt-day-btn').forEach(b => {
+    b.classList.toggle('active', (state.marketDays||[]).includes(b.dataset.day));
+  });
+  buildMarketYieldTable();
+  buildMarketCalendar();
+  buildGapsAnalysis();
+}
+
+function initMarketPlanner() {
+  buildMarketTab();
+}
+
+// =====================================================
+// STARTUP
+// =====================================================
+(function init() {
+  // Initialize time display
+  updateTimeDisplay();
+  updateSunInfo();
+
+  if (state.onboardingDone) {
+    // Skip wizard, go straight to app
+    document.getElementById('onboarding-overlay').style.display = 'none';
+    document.getElementById('main-app').style.display = '';
+    document.getElementById('header-location').textContent = state.location;
+    if (state.growingForMarket) document.getElementById('market-tab-btn').style.display = '';
+    initSunTracker();
+    initBedPlanner();
+  }
+  // Otherwise the onboarding overlay is already visible
+})();
+</script>
+</body>
+</html>
